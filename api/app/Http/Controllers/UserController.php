@@ -5,48 +5,59 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Routing\Controller;
 
 class UserController extends Controller
 {
-  use AuthorizesRequests;
-
-  public function index()
+  /**
+   * @description Display a listing of the users.
+   * @return ResourceCollection
+   */
+  public function index(): ResourceCollection
   {
-    $this->authorize('viewAny', User::class);
-
     return UserResource::collection(User::all());
   }
 
-  public function store(UserRequest $request)
+  /**
+   * @description Store a newly created user.
+   * @param UserRequest $request
+   * @return UserResource
+   */
+  public function store(UserRequest $request): UserResource
   {
-    $this->authorize('create', User::class);
-
     return new UserResource(User::create($request->validated()));
   }
 
-  public function show(User $user)
+  /**
+   * @description Display a user
+   * @param User $user
+   * @return UserResource
+   */
+  public function show(User $user): UserResource
   {
-    $this->authorize('view', $user);
-
     return new UserResource($user);
   }
 
-  public function update(UserRequest $request, User $user)
+  /**
+   * @description  Update the specified user
+   * @param UserRequest $request
+   * @param User $user
+   * @return UserResource
+   */
+  public function update(UserRequest $request, User $user): UserResource
   {
-    $this->authorize('update', $user);
-
     $user->update($request->validated());
-
     return new UserResource($user);
   }
 
-  public function destroy(User $user)
+  /**
+   * @description Remove the specified user
+   * @param User $user
+   * @return bool
+   */
+  public function destroy(User $user): bool
   {
-    $this->authorize('delete', $user);
-
-    $user->delete();
-
-    return response()->json();
+    return $user->delete();
   }
 }
