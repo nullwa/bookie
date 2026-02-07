@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { typeOrmConfig } from '@/database/typeorm.config'
+import { typeormConfig } from '@/database/typeorm.config'
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig)],
-  exports: [TypeOrmModule]
+  imports: [TypeOrmModule.forRoot(typeormConfig)],
+  exports: [TypeOrmModule],
 })
-
-export class DatabaseModule {
-}
+export class DatabaseModule {}
