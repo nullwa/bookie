@@ -34,7 +34,7 @@ export class User {
   /**
    * @description The password should be hashed before being stored in the database
    */
-  @Column({ name: 'u-password', select: false })
+  @Column({ name: 'u-password' })
   @Check(`CHAR_LENGTH(u_password) >= 8`)
   password: string
 
