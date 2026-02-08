@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { BeforeInsert, BeforeUpdate, Check, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { hash } from 'bcrypt'
 
 import { SALT_ROUND } from '@/_app/constants/const'
@@ -34,7 +34,8 @@ export class User {
   /**
    * @description The password should be hashed before being stored in the database
    */
-  @Column({ name: 'u-password' })
+  @Column({ name: 'u-password', select: false })
+  @Check(`CHAR_LENGTH(u_password) >= 8`)
   password: string
 
   /**

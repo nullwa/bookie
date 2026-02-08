@@ -1,6 +1,9 @@
 import { Body, Controller, Get, Post } from '@nestjs/common'
-import { AuthService } from '@/auth/auth.service'
-import { CreateAuthDto } from '@/auth/dto/login-auth.dto'
+
+import { AuthService } from '@/auth/service/auth.service'
+import { LoginAuthDto } from '@/auth/dto/login-auth.dto'
+import { RegisterAuthDto } from '@/auth/dto/register-auth.dto'
+import { TokenAuthDto } from '@/auth/dto/token-auth.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -9,15 +12,17 @@ export class AuthController {
   }
 
   @Post('login')
-  login(@Body() createAuthDto: CreateAuthDto) {
-    return this._authService.login(createAuthDto)
+  login(@Body() loginAuthDto: LoginAuthDto) {
+    return this._authService.login(loginAuthDto)
   }
 
   @Post('register')
-  register(@Body() createAuthDto: CreateAuthDto) {
+  register(@Body() registerAuthDto: RegisterAuthDto) {
+    return this._authService.register(registerAuthDto)
   }
 
   @Get()
-  me(@Body createAuthDto: CreateAuthDto) {
+  me(@Body() tokenAuthDto: TokenAuthDto) {
+    return this._authService.me(tokenAuthDto)
   }
 }
