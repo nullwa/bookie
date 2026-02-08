@@ -1,32 +1,35 @@
-import { IsEmail, isString, IsString, MinLength } from "class-validator"
+import { IsEmail, IsEnum, IsNotEmpty, MinLength } from "class-validator"
+
+import { eUserRole } from "@/_app/constants/enum"
 
 export class RegisterAuthDto {
   /**
-   * @description The first name of the user
-   * @example Wale
+   * @description DTO: The first name must not be empty.
    */
-  @IsString()
+  @IsNotEmpty()
   firstName: string
 
   /**
-   * @description The last name of the user
-   * @example Sebii
+   * @description DTO: The last name must not be empty.
    */
-  @IsString()
+  @IsNotEmpty()
   lastName: string
 
   /**
-   * @description The email must be a valid email address.
-   * @example "test@mail.co
+   * @description DTO: The email must be a valid email address.
    */
   @IsEmail()
   email: string
 
   /**
-   * @description The password must be at least 8 characters long.
-   * @example "P@ssw0rd"
+   * @description DTO: The password must be at least 8 characters long.
    */
-  @IsString()
   @MinLength(8, { message: 'Password must be at least 8 characters long' })
   password: string
+
+  /**
+   * @description DTO: The role must be one of the values defined in the eUserRole enum.
+   */
+  @IsEnum(eUserRole)
+  role: eUserRole = eUserRole.GUEST
 }

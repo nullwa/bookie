@@ -48,7 +48,7 @@ export class User {
   /**
    * @description The abilities of the user, which is a many-to-many relationship with the Ability entity
    */
-  @Column({ name: 'u-abilities', type: 'simple-array' })
+  @Column({ name: 'u-abilities', type: 'simple-array', nullable: true })
   abilities: eUserAbility[]
 
   /**
@@ -87,6 +87,25 @@ export class User {
   }
 
   /**
+   * @description Generates the user's abilities based on their role after the user entity has been inserted into the database
+   * This method is decorated with @AfterInsert to ensure that the abilities are generated after the user has been successfully inserted into the database
+   * The abilities are assigned based on the user's role, with ADMIN having all abilities, BUSINESS_OWNER having a specific set of abilities, and BUSINESS_STUFF having a more limited set of abilities
+   * @returns void
+   */
+  @BeforeInsert()
+  public generateAbilitiesBasedOnRole = (): void => {
+    if (this.role === eUserRole.ADMIN) {
+      this.abilities = Object.values(eUserAbility)
+    }
+    if (this.role === eUserRole.BUSINESS_OWNER) {
+      this.abilities = [eUserAbility.BUSINESS_MOD, eUserAbility.BUSINESS_VIEW, eUserAbility.EMPLOYEE_MOD, eUserAbility.EMPLOYEE_VIEW, eUserAbility.RESOURCE_MOD, eUserAbility.RESOURCE_VIEW, eUserAbility.RESERVATION_MOD, eUserAbility.RESERVATION_VIEW, eUserAbility.BOOKING_MOD, eUserAbility.BOOKING_VIEW, eUserAbility.BOOKING_CANCEL]
+    }
+    if (this.role === eUserRole.BUSINESS_STUFF) {
+      this.abilities = [eUserAbility.BUSINESS_VIEW, eUserAbility.EMPLOYEE_VIEW, eUserAbility.RESOURCE_VIEW, eUserAbility.RESERVATION_VIEW, eUserAbility.RESERVATION_MOD, eUserAbility.BOOKING_VIEW]
+    }
+  }
+
+  /**
    * @description Adds a new ability to the user's abilities array if it does not already exist
    * @param ability
    * @return true if the ability was added successfully, false if the ability already exists in the user's abilities array
@@ -104,7 +123,7 @@ export class User {
    * @return true if the ability was removed successfully, false if the ability does not exist in the user's abilities array
    */
   public removeAbility = (ability: eUserAbility): boolean => {
-    if (!this.abilities.includes(ability)) return false
+    if (!this.abilities || !this.abilities.includes(ability)) return false
     this.abilities = this.abilities.filter(a => a !== ability)
     return true
   }

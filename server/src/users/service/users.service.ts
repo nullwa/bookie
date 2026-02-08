@@ -10,12 +10,18 @@ import { UpdateUserDto } from '@/users/dto/update-user.dto'
 export class UsersService {
   constructor(@InjectRepository(User) private _userRepository: Repository<User>) { }
 
-  create(createUserDto: CreateUserDto): Promise<User | null> {
-    return this._userRepository.save(this._userRepository.create(createUserDto))
+  /**
+   * @description Create a new user
+   * @param createUserDto
+   * @returns User
+   */
+  public create = (createUserDto: CreateUserDto): Promise<User | null> => {
+    const user = this._userRepository.create(createUserDto)
+    return this._userRepository.save(user)
   }
 
   findAll() {
-    return `This action returns all users`
+    return this._userRepository.find();
   }
 
   findOne(id: number) {
