@@ -1,0 +1,12 @@
+export enum eUserRole {
+    ADMIN = 'ADMIN',
+    BUSINESS_OWNER = 'BUSINESS_OWNER',
+    BUSINESS_EMPLOYEE = 'BUSINESS_EMPLOYEE',
+    CLIENT = 'CLIENT',
+    GUEST = 'GUEST'
+}
+
+export enum eUserAbility {
+    CREATE_BUSINESS = 'CREATE_BUSINESS',
+    UPDATE_BUSINESS = 'UPDATE_BUSINESS'
+}

@@ -4,11 +4,12 @@ import { ConfigModule } from '@nestjs/config'
 /**
  * @description Services inside the application
  */
-import { DatabaseModule } from '@/database/database.module'
+import { DatabaseModule } from '@/_app/database/database.module'
 import { UsersModule } from '@/users/users.module'
+import { AuthModule } from '@/auth/auth.module'
 
 @Module({
-  imports: [ConfigModule.forRoot(), DatabaseModule, UsersModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, AuthModule],
   controllers: [],
   providers: []
 })
