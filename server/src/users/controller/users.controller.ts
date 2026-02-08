@@ -3,12 +3,16 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { UsersService } from '@/users/service/users.service'
 import { CreateUserDto } from '@/users/dto/create-user.dto'
 import { UpdateUserDto } from '@/users/dto/update-user.dto'
+import { Roles } from '@/_app/decorators/role.decorator'
+import { Abilities } from '@/_app/decorators/abilities.decorator'
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {
   }
 
+  @Roles('ADMIN')
+  @Abilities('TENANT_MOD')
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto)

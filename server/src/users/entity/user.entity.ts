@@ -1,7 +1,7 @@
 import { BeforeInsert, BeforeUpdate, Check, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { hash } from 'bcrypt'
 
-import { SALT_ROUND } from '@/_app/constants/const'
+import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
 import { eUserAbility, eUserRole } from '@/_app/constants/enum'
 
 @Entity({ name: 'dbo-users' })
@@ -94,14 +94,22 @@ export class User {
    */
   @BeforeInsert()
   public generateAbilitiesBasedOnRole = (): void => {
-    if (this.role === eUserRole.ADMIN) {
-      this.abilities = Object.values(eUserAbility)
-    }
-    if (this.role === eUserRole.BUSINESS_OWNER) {
-      this.abilities = [eUserAbility.BUSINESS_MOD, eUserAbility.BUSINESS_VIEW, eUserAbility.EMPLOYEE_MOD, eUserAbility.EMPLOYEE_VIEW, eUserAbility.RESOURCE_MOD, eUserAbility.RESOURCE_VIEW, eUserAbility.RESERVATION_MOD, eUserAbility.RESERVATION_VIEW, eUserAbility.BOOKING_MOD, eUserAbility.BOOKING_VIEW, eUserAbility.BOOKING_CANCEL]
-    }
-    if (this.role === eUserRole.BUSINESS_STUFF) {
-      this.abilities = [eUserAbility.BUSINESS_VIEW, eUserAbility.EMPLOYEE_VIEW, eUserAbility.RESOURCE_VIEW, eUserAbility.RESERVATION_VIEW, eUserAbility.RESERVATION_MOD, eUserAbility.BOOKING_VIEW]
+    switch (this.role) {
+      case eUserRole.ADMIN:
+        this.abilities = Object.values(eUserAbility) as eUserAbility[]
+        break
+      case eUserRole.BUSINESS_OWNER:
+        this.abilities = ROLE_ABILITIES[eUserRole.BUSINESS_OWNER] as eUserAbility[]
+        break;
+      case eUserRole.BUSINESS_STUFF:
+        this.abilities = ROLE_ABILITIES[eUserRole.BUSINESS_STUFF] as eUserAbility[]
+        break;
+      case eUserRole.CLIENT:
+        this.abilities = ROLE_ABILITIES[eUserRole.CLIENT] as eUserAbility[]
+        break;
+      case eUserRole.GUEST:
+      default:
+        break;
     }
   }
 
