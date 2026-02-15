@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Check, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { BeforeInsert, BeforeUpdate, Check, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { hash } from 'bcrypt'
 
 import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
@@ -63,6 +63,14 @@ export class User {
    */
   @UpdateDateColumn({ name: 'u-updated-at' })
   updatedAt: Date
+
+  /**
+   * @description The deletedAt column is automatically managed by TypeORM
+   * and is updated whenever the user entity is romoved
+   */
+  @DeleteDateColumn({ name: 'u-deleted-at' })
+  deletedAt: Date
+
   //</editor-fold>
 
   //<editor-fold desc="Methods">
