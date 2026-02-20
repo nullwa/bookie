@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
-import * as bcrypt from 'bcrypt'
 
 import { User } from '@/users/entity/user.entity'
 import { CreateUserDto } from '@/users/dto/create-user.dto'
 import { UpdateUserDto } from '@/users/dto/update-user.dto'
+import { PaginatedUserResponseDto } from '../dto/paginated-user-response.dto'
 
 
 @Injectable()
@@ -22,8 +22,15 @@ export class UsersService {
     return this._userRepository.save(user)
   }
 
-   public findAll = async (): Promise<User[]> => {
-    return await this._userRepository.find();
+   public findAll = async (page=1, limit=10):  Promise<PaginatedUserResponseDto<User>> => {
+    page = page < 1 ? 1 : page;
+    limit = limit < 1 ? 10 : limit;
+    const [data, total] = await this._userRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      order:{createdAt: 'DESC'}
+    });
+    return new PaginatedUserResponseDto(data,total,page,limit);
   }
 
   public findOne = async (uid: number): Promise<User> => {
