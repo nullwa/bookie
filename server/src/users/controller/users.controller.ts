@@ -1,40 +1,66 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 
 import { UsersService } from '@/users/service/users.service'
-import { CreateUserDto } from '@/users/dto/create-user.dto'
-import { UpdateUserDto } from '@/users/dto/update-user.dto'
+import { RequestUserQueryDto } from '@/users/dto/user-query-dto'
+import { UserCreateDto, UserUpdateDto } from '@/users/dto/user-mutate.dto'
+
+import { Public } from '@/_app/decorators/public.decorator'
 import { Roles } from '@/_app/decorators/role.decorator'
 import { Abilities } from '@/_app/decorators/abilities.decorator'
-import { Public } from '@/_app/decorators/public.decorator'
 
 @Public()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {
-  }
+  constructor(private readonly usersService: UsersService) { }
 
+  /**
+   * @description This method is responsible for creating a new user.
+   * @param userCreateDto
+   * @returns The created user object or null if the creation fails.
+   */
+  @Post()
   @Roles('ADMIN')
   @Abilities('TENANT_MOD')
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto)
+  create(@Body() userCreateDto: UserCreateDto) {
+    return this.usersService.create(userCreateDto)
   }
 
+  /**
+   * @description This method retrieves a paginated list of users based on the provided query parameters.
+   * @param userQueryDto 
+   * @returns An object containing the list of users and pagination metadata.
+   */
   @Get()
-  findAll() {
-    return this.usersService.findAll()
+  findAll(@Query() userQueryDto: RequestUserQueryDto) {
+    return this.usersService.findAll(userQueryDto)
   }
 
+  /**
+   * @description This method retrieves a single user by their unique identifier (id).
+   * @param id
+   * @returns The user object corresponding to the provided id, or null if no user is found.
+   */
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id)
   }
 
+  /**
+   * @description This method updates an existing user's information based on their unique identifier (id) and the provided update data.
+   * @param id
+   * @param userUpdateDto 
+   * @returns The updated user object after the update operation is performed, or null if the update fails or the user is not found.
+   */
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto)
+  update(@Param('id') id: string, @Body() userUpdateDto: UserUpdateDto) {
+    return this.usersService.update(+id, userUpdateDto)
   }
 
+  /**
+   * @description This method deletes a user based on their unique identifier (id)
+   * @param id
+   * @returns The result of the delete operation.
+   */
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id)

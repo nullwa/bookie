@@ -1,3 +1,6 @@
+/**
+ * @description eUserRole enum defines the various roles that a user can have within the system.
+ */
 export enum eUserRole {
     ADMIN = 'ADMIN',
     BUSINESS_OWNER = 'BUSINESS_OWNER',
@@ -6,6 +9,9 @@ export enum eUserRole {
     GUEST = 'GUEST'
 }
 
+/**
+ * @description eUserAbility enum defines the various permissions or abilities that a user can have within the system.
+ */
 export enum eUserAbility {
     TENANT_MOD = 'TENANT_MOD',
     TENANT_VIEW = 'TENANT_VIEW',
@@ -24,4 +30,12 @@ export enum eUserAbility {
     BOOKING_MOD = 'BOOKING_MOD',
     BOOKING_VIEW = 'BOOKING_VIEW',
     BOOKING_CANCEL = 'BOOKING_CANCEL'
+}
+
+/**
+ * @description eSortDirection enum defines the possible sorting directions for query results.
+ */
+export enum eSortDirection {
+    ASC = 'asc',
+    DESC = 'desc'
 }
