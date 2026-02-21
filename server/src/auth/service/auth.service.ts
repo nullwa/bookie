@@ -77,4 +77,6 @@ export class AuthService {
     user.password = resetAuthDto.password
     await this._usersService.update(user.uid, user)
   }
+
+  public sendEmailVerification = async (email: string): Promise<void> => { }
 }
