@@ -13,7 +13,11 @@ export class AuthGuard implements CanActivate {
     private jwtService: JwtService,
     private reflector: Reflector,
   ) { }
-
+  /**
+   * @description This guard checks if the route is public, validates the JWT token, checks user roles and abilities.
+   * @param context
+   * @returns boolean
+   */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const handler = context.getHandler();
     const cls = context.getClass();
@@ -64,6 +68,11 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
+  /**
+   * @description Extracts the Bearer token from the Authorization header.
+   * @param request
+   * @returns 
+   */
   private extractTokenFromHeader(request: any): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
