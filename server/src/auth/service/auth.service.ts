@@ -39,11 +39,16 @@ export class AuthService {
   /**
    * @description Registers a new user using the provided registration data.
    * @param registerAuthDto
-   * @returns 
+   * @returns token
+   * @throws UnauthorizedException if the registration fails (e.g., unable to create user).
    */
-  public register = async (registerAuthDto: RegisterAuthDto): Promise<string> => {
+  public register = async (registerAuthDto: RegisterAuthDto): Promise<{ token: string }> => {
     const user = await this._usersService.create(registerAuthDto)
-    return 'this action register a new user'
+
+    if (!user)
+      throw new UnauthorizedException('Registration failed: unable to create user')
+
+    return this.login({ email: user.email, password: user.password })
   }
 
   /**
