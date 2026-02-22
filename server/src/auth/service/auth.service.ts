@@ -45,7 +45,7 @@ export class AuthService {
     if (!user)
       throw new UnauthorizedException('Registration failed: unable to create user')
 
-    return this.login({ email: user.email, password: user.password })
+    return this.login({ email: authRegisterDto.email, password: authRegisterDto.password })
   }
 
   /**

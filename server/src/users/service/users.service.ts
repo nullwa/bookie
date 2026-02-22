@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { Repository } from 'typeorm'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { FindManyOptions, Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { User } from '@/users/entity/user.entity'
 
 import { RequestUserQueryDto } from '@/users/dto/user-query-dto'
 import { UserCreateDto, UserUpdateDto } from '@/users/dto/user-mutate.dto'
-import { parseParamValue, parseOrderBy, mapSortDirection } from '@/_app/constants/helper'
+import { parseParamValue, parseOrderBy, mapSortDirection, parseKeyValue } from '@/_app/constants/helper'
 
 
 @Injectable()
@@ -28,36 +28,55 @@ export class UsersService {
    * @param userQueryDto
    * @returns 
    */
-  public findAll = async (userQueryDto: RequestUserQueryDto): Promise<{ data: User[], meta: { page: number, limit: number, total: number, totalPages: number } }> => {
-    const { page, limit, sort, orderBy, search, fields, include } = userQueryDto
-    const qb = this._userRepository.createQueryBuilder('user')
+  public findAll = async (userQueryDto: RequestUserQueryDto): Promise<{ data: User[]; meta: { page: number; limit: number; total: number; totalPages: number } }> => {
+    const { page = 1, limit = 25, sort, search, fields, include } = userQueryDto
+
+    // metadata
+    const entityMetadata = this._userRepository.metadata
+    const validColumns = entityMetadata.columns.map(c => c.propertyName)
+    const validRelations = entityMetadata.relations.map(r => r.propertyName)
+
+    const errors: string[] = []
 
     // search
-    const searchFields = parseParamValue<User>(search)
-    if (searchFields.length)
-      qb.andWhere(searchFields.map((field, index) => `user.${String(field)} ILIKE :search${index}`).join(' OR '), Object.fromEntries(searchFields.map((_, i) => [`search${i}`, `%${search}%`])))
+    const where: Record<string, any> = {}
+    parseKeyValue<User>(search).forEach(s => {
+      if (!validColumns.includes(s.field as string)) errors.push(`Invalid search field: ${s.field}`)
+      else where[s.field] = Like(`%${s.value}%`)
+    })
 
-    // fields
-    const selectedFields = parseParamValue<User>(fields)
-    if (selectedFields.length)
-      qb.select(selectedFields.map(f => `user.${String(f)}`))
+    // select
+    const select = parseParamValue<User>(fields)
+    select.forEach(f => { if (!validColumns.includes(f as string)) errors.push(`Invalid field requested: ${f}`) })
 
     // relations
     const relations = parseParamValue<User>(include)
-    relations.forEach(relation => { qb.leftJoinAndSelect(`user.${String(relation)}`, String(relation)) })
+    relations.forEach(r => { if (!validRelations.includes(r as string)) errors.push(`Invalid relation requested: ${r}`) })
 
     // sort
-    const orders = parseOrderBy<User>(orderBy, sort)
-    if (Object.keys(orders).length) Object.entries(orders).forEach(([field, direction]) => { qb.addOrderBy(`user.${field}`, mapSortDirection(direction)) })
-    else qb.addOrderBy('user.createdAt', mapSortDirection(sort))
+    let order: FindManyOptions<User>['order'] = { createdAt: 'DESC' } // default
+    if (sort) {
+      const [field, direction] = Object.entries(parseOrderBy<User>(sort))[0]
+      if (!validColumns.includes(field as string)) errors.push(`Invalid orderBy field: ${field}`)
+      else order = { [field]: mapSortDirection(direction) as 'ASC' | 'DESC' }
+    }
 
-    // pagination
-    qb.skip((page - 1) * limit).take(limit)
-    const [data, total] = await qb.getManyAndCount()
+    // errors
+    if (errors.length) throw new BadRequestException(errors)
 
-    return { data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } }
+    // data
+    const options: FindManyOptions<User> = {
+      where: Object.keys(where).length ? where : undefined,
+      select: select.length ? select as (keyof User)[] : undefined,
+      relations: relations.length ? relations : undefined,
+      order: order,
+      skip: (page - 1) * limit,
+      take: limit,
+    }
+    const [data, total] = await this._userRepository.findAndCount(options)
+
+    return { data, meta: { page, limit, total, totalPages: Math.ceil(total / limit), } }
   }
-
 
   /**
    * @description Retrieves a user by their unique identifier (uid). If the user is not found, a NotFoundException is thrown.

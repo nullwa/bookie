@@ -40,6 +40,22 @@ export const parseOrderBy = <T extends object>(input: string, defaultDirection: 
  * @returns 'ASC' if the input direction is 'asc' (case-insensitive), otherwise 'DESC'.
  */
 export const mapSortDirection = (direction: eSortDirection): 'ASC' | 'DESC' => {
-  if (!direction) return 'DESC' // default fallback
+  if (!direction) return 'DESC'
   return direction.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+}
+
+/**
+ * @description Parses a comma-separated string of field:value pairs and returns an array of objects containing the field and value.
+ * @param input
+ * @returns An array of objects where each object has a 'field' key (keyof T) and a 'value' key (string).
+ */
+export const parseKeyValue = <T extends object>(input: string): { field: keyof T; value: string }[] => {
+  if (!input?.trim()) return []
+
+  return input.split(',').map(pair => {
+    const [field, value] = pair.split(':').map(s => s.trim())
+    if (!field || !value) return null
+
+    return { field: field as keyof T, value }
+  }).filter(Boolean) as { field: keyof T; value: string }[]
 }

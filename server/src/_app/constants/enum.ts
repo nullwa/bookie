@@ -36,6 +36,6 @@ export enum eUserAbility {
  * @description eSortDirection enum defines the possible sorting directions for query results.
  */
 export enum eSortDirection {
-    ASC = 'asc',
-    DESC = 'desc'
+    ASC = 'ASC',
+    DESC = 'DESC'
 }

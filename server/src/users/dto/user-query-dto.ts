@@ -1,5 +1,5 @@
-import { IsEnum, IsNumber, IsOptional, IsString, Min } from "class-validator"
-import { eSortDirection } from "@/_app/constants/enum"
+import { IsNumber, IsOptional, IsString, Min } from "class-validator"
+import { Type } from 'class-transformer'
 
 // DTO: The RequestUserQueryDto class defines the structure and validation rules for querying users with pagination, sorting, and filtering options.
 export class RequestUserQueryDto {
@@ -8,6 +8,7 @@ export class RequestUserQueryDto {
    */
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   @Min(1, { message: 'Page must be at least 1' })
   page: number = 1
 
@@ -16,6 +17,7 @@ export class RequestUserQueryDto {
    */
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   @Min(10, { message: 'Limit must be at least 10' })
   limit: number = 25
 
@@ -23,15 +25,8 @@ export class RequestUserQueryDto {
    * @description DTO: The sorting order for the results. Must be either 'asc' for ascending or 'desc' for descending. Default is 'desc'.
    */
   @IsOptional()
-  @IsEnum(eSortDirection)
-  sort: eSortDirection = eSortDirection.DESC
-
-  /**
-   * @description DTO: A comma-separated list of fields to sort by, with optional direction (e.g., "name:ASC,createdAt:DESC"). If no direction is specified for a field, the default sort direction will be used. This is an optional string that allows for complex sorting of the results.
-   */
-  @IsOptional()
   @IsString()
-  orderBy: string
+  sort: string
 
   /**
    * @description DTO: A search term to filter the results. This is an optional string that can be used to perform a search query on the user data.
