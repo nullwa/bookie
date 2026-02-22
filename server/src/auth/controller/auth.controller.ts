@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req } from '@nestjs/common'
+import { Request } from 'express'
 
 import { AuthService } from '@/auth/service/auth.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
-import { AuthTokenDto } from '@/auth/dto/auth-token.dto'
 
 import { Public } from '@/_app/decorators/public.decorator'
 
@@ -34,11 +34,11 @@ export class AuthController {
 
   /**
    * @description return the user associated with the JWT token
-   * @param authTokenDto 
+   * @param request
    * @returns The user object associated with the JWT token.
    */
   @Get()
-  me(@Body() authTokenDto: AuthTokenDto) {
-    return this._authService.me(authTokenDto)
+  me(@Req() request: Request & { user: { sub: number, email: string, role: string, abilities: string[], iat: number, exp: number } }) {
+    return request.user;
   }
 }
