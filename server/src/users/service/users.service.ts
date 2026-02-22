@@ -37,7 +37,6 @@ export class UsersService {
     if (searchFields.length)
       qb.andWhere(searchFields.map((field, index) => `user.${String(field)} ILIKE :search${index}`).join(' OR '), Object.fromEntries(searchFields.map((_, i) => [`search${i}`, `%${search}%`])))
 
-
     // fields
     const selectedFields = parseParamValue<User>(fields)
     if (selectedFields.length)
@@ -51,7 +50,6 @@ export class UsersService {
     const orders = parseOrderBy<User>(orderBy, sort)
     if (Object.keys(orders).length) Object.entries(orders).forEach(([field, direction]) => { qb.addOrderBy(`user.${field}`, mapSortDirection(direction)) })
     else qb.addOrderBy('user.createdAt', mapSortDirection(sort))
-
 
     // pagination
     qb.skip((page - 1) * limit).take(limit)
