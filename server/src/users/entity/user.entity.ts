@@ -1,10 +1,12 @@
-import { BeforeInsert, BeforeUpdate, Check, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { BeforeInsert, BeforeUpdate, Check, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, TableInheritance, OneToOne, JoinColumn } from 'typeorm'
 import { hash } from 'bcrypt'
 
 import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
 import { eUserAbility, eUserRole } from '@/_app/constants/enum'
+import { Employee } from './employees.entity'
 
 @Entity({ name: 'dbo-users' })
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class User {
   //<editor-fold desc="Properties">
   /**
@@ -143,5 +145,14 @@ export class User {
     this.abilities = this.abilities.filter(a => a !== ability)
     return true
   }
-  //</editor-fold>
+  
+  @OneToOne(() => Employee, (employee) => employee.user, {
+    eager: false,
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+@JoinColumn()
+employee: Employee;
+  
 }
