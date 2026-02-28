@@ -2,15 +2,17 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { compare } from 'bcrypt'
 
+import { MailService } from '@/_app/mail/mail.service'
 import { UsersService } from '@/users/service/users.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
-import { AuthTokenDto, AuthResetPasswordDto } from '@/auth/dto/auth-token.dto'
+import { AuthTokenDto, AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly _jwtService: JwtService,
     private readonly _usersService: UsersService,
-    private readonly _jwtService: JwtService
+    private readonly _mailService: MailService
   ) { }
 
   /**
@@ -56,6 +58,22 @@ export class AuthService {
   public me = async (authTokenDto: AuthTokenDto): Promise<any> => {
     const payload = this._jwtService.verify(authTokenDto.token)
     return payload
+  }
+
+  /**
+   * @description Initiates the password reset process by sending a password reset email to the user associated with the provided email address.
+   * @param authForgotPasswordDto
+   * @returns An object containing a message indicating that the password reset email has been sent.
+   */
+  public forgotPassword = async (authForgotPasswordDto: AuthForgotPasswordDto): Promise<{ message: string }> => {
+    const user = await this._usersService.findByEmail(authForgotPasswordDto.email)
+
+    if (!user)
+      return { message: 'An account with this email does not exist.' }
+
+    const resetToken: string = this._jwtService.sign({ sub: user.uid, email: user.email, type: 'reset-password' }, { expiresIn: '15m' })
+    await this._mailService.sendMail({ user_name: user.getFullName(), user_email: user.email, subject: 'Password Reset', content: 'reset-password.template.hbs', token: resetToken })
+    return { message: 'If an account with this email exists, a password reset link has been sent.' }
   }
 
   /**

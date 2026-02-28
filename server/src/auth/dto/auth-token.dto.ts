@@ -1,4 +1,4 @@
-import { IsString, MinLength } from "class-validator";
+import { IsEmail, IsString, MinLength } from "class-validator";
 
 // DTO for returning the JWT token after successful authentication
 export class AuthTokenDto {
@@ -7,6 +7,15 @@ export class AuthTokenDto {
    */
   @IsString()
   token: string
+}
+
+// DtO for sending frogot password email
+export class AuthForgotPasswordDto {
+  /**
+   * @description DTO: the email that will recieve the reset password link.
+   */
+  @IsEmail()
+  email: string
 }
 
 // DTO for resetting password using a token

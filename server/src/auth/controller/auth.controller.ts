@@ -3,12 +3,23 @@ import { Request } from 'express'
 
 import { AuthService } from '@/auth/service/auth.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
+import { AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
 
 import { Public } from '@/_app/decorators/public.decorator'
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly _authService: AuthService) { }
+
+  /**
+   * @description return the user associated with the JWT token
+   * @param request
+   * @returns The user object associated with the JWT token. 
+   */
+  @Get()
+  me(@Req() request: Request & { user: { sub: number, email: string, role: string, abilities: string[], iat: number, exp: number } }) {
+    return request.user;
+  }
 
   /**
    * @description authenticate a user and return a JWT token
@@ -33,12 +44,13 @@ export class AuthController {
   }
 
   /**
-   * @description return the user associated with the JWT token
-   * @param request
-   * @returns The user object associated with the JWT token.
+   * @description send a forgot notification to the requesting email
+   * @param authForgotPasswordDto
+   * @returns the notification has been sent or not
    */
-  @Get()
-  me(@Req() request: Request & { user: { sub: number, email: string, role: string, abilities: string[], iat: number, exp: number } }) {
-    return request.user;
+  @Public()
+  @Post('forgot-password')
+  forgotPassword(@Body() authForgotPasswordDto: AuthForgotPasswordDto) {
+    return this._authService.forgotPassword(authForgotPasswordDto);
   }
 }

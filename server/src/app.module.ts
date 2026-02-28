@@ -6,12 +6,14 @@ import { ConfigModule } from '@nestjs/config'
  * @description Services inside the application
  */
 import { AuthGuard } from '@/_app/guards/auth-guard.guard'
-import { DatabaseModule } from '@/_app/database/database.module'
-import { UsersModule } from '@/users/users.module'
+
 import { AuthModule } from '@/auth/auth.module'
+import { UsersModule } from '@/users/users.module'
+import { MailModule } from '@/_app/mail/mail.module'
+import { DatabaseModule } from '@/_app/database/database.module'
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, AuthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), DatabaseModule, UsersModule, AuthModule, MailModule],
   controllers: [],
   providers: [
     { provide: APP_GUARD, useClass: AuthGuard }
