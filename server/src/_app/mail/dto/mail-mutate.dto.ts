@@ -1,4 +1,4 @@
-import { IsString } from "class-validator"
+import { IsNumber, IsOptional, IsString } from "class-validator"
 
 // DTO for email sending
 export class MailMutateDto {
@@ -16,4 +16,8 @@ export class MailMutateDto {
 
   @IsString()
   token: string
+
+  @IsNumber()
+  @IsOptional()
+  tokenExpires: number = 2
 }

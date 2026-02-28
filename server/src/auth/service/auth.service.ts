@@ -1,6 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { compare } from 'bcrypt'
+import type { StringValue } from 'ms'
 
 import { MailService } from '@/_app/mail/mail.service'
 import { UsersService } from '@/users/service/users.service'
@@ -12,7 +14,8 @@ export class AuthService {
   constructor(
     private readonly _jwtService: JwtService,
     private readonly _usersService: UsersService,
-    private readonly _mailService: MailService
+    private readonly _mailService: MailService,
+    private readonly _configService: ConfigService
   ) { }
 
   /**
@@ -71,8 +74,8 @@ export class AuthService {
     if (!user)
       return { message: 'An account with this email does not exist.' }
 
-    const resetToken: string = this._jwtService.sign({ sub: user.uid, email: user.email, type: 'reset-password' }, { expiresIn: '15m' })
-    await this._mailService.sendMail({ user_name: user.getFullName(), user_email: user.email, subject: 'Password Reset', content: 'reset-password.template.hbs', token: resetToken })
+    const resetToken: string = this._jwtService.sign({ sub: user.uid, email: user.email, type: 'reset-password' }, { expiresIn: `${this._configService.get<number>('MAIL_RESET_PASSWORD_VALIDITY') || 1}${this._configService.get<string>('MAIL_RESET_PASSWORD_VALIDITY_UNIT') || 'h'}` as StringValue })
+    await this._mailService.sendMail({ user_name: user.getFullName(), user_email: user.email, subject: 'Password Reset', content: 'reset-password.template.hbs', token: resetToken, tokenExpires: this._configService.get<number>('MAIL_RESET_PASSWORD_VALIDITY') || 1 })
     return { message: 'If an account with this email exists, a password reset link has been sent.' }
   }
 

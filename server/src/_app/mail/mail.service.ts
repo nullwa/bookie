@@ -31,7 +31,7 @@ export class MailService {
         context: {
           appName: this._configService.get<string>('APP_NAME'),
           name: mailMutateDto.user_name,
-          tokenExpires: 15,
+          tokenExpires: mailMutateDto.tokenExpires,
           resetLink,
           supportEmail: this._configService.get<string>('MAIL_SUPPORT_EMAIL'),
           year: new Date().getFullYear(),
