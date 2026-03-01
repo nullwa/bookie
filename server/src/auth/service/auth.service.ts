@@ -7,7 +7,7 @@ import type { StringValue } from 'ms'
 import { MailService } from '@/_app/mail/mail.service'
 import { UsersService } from '@/users/service/users.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
-import { AuthTokenDto, AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
+import { AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
 
 @Injectable()
 export class AuthService {
@@ -54,16 +54,6 @@ export class AuthService {
   }
 
   /**
-   * @description Verifies the provided JWT token and returns the decoded payload if the token is valid.
-   * @param authTokenDto 
-   * @returns payload token
-   */
-  public me = async (authTokenDto: AuthTokenDto): Promise<any> => {
-    const payload = this._jwtService.verify(authTokenDto.token)
-    return payload
-  }
-
-  /**
    * @description Initiates the password reset process by sending a password reset email to the user associated with the provided email address.
    * @param authForgotPasswordDto
    * @returns An object containing a message indicating that the password reset email has been sent.
@@ -85,16 +75,14 @@ export class AuthService {
    * @returns void
    * @throws UnauthorizedException if the token is invalid or the user is not found.
    */
-  public resetPassword = async (resetAuthDto: AuthResetPasswordDto): Promise<void> => {
-    const payload = this._jwtService.verify(resetAuthDto.token.token)
-    const user = await this._usersService.findByEmail(payload.email)
+  public resetPassword = async (resetAuthDto: AuthResetPasswordDto): Promise<{ message: string }> => {
+    const user = await this._usersService.findOne(resetAuthDto.sub)
 
     if (!user)
       throw new UnauthorizedException('Invalid token: user not found')
 
     user.password = resetAuthDto.password
-    await this._usersService.update(user.uid, user)
+    const userUpdated = await this._usersService.update(user.uid, user)
+    return { message: 'Password has been reset successfully.' }
   }
-
-  public sendEmailVerification = async (email: string): Promise<void> => { }
 }

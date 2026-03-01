@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common'
-import { Request } from 'express'
+import { Body, Controller, Get, Post, Req, UnauthorizedException } from '@nestjs/common'
 
 import { AuthService } from '@/auth/service/auth.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
-import { AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
+import { AuthForgotPasswordDto, AuthResetPasswordDto } from '@/auth/dto/auth-token.dto'
 
 import { Public } from '@/_app/decorators/public.decorator'
 
@@ -17,7 +16,7 @@ export class AuthController {
    * @returns The user object associated with the JWT token. 
    */
   @Get()
-  me(@Req() request: Request & { user: { sub: number, email: string, role: string, abilities: string[], iat: number, exp: number } }) {
+  me(@Req() request: Request & { user: { sub: number, email: string, role: string, abilities: string[] } }) {
     return request.user;
   }
 
@@ -58,7 +57,12 @@ export class AuthController {
    * 
    * @returns 
    */
-  resetPassword() {
-    return null
+  @Post('reset-password')
+  resetPassword(@Req() request: Request & { user: { sub: number, email: string, type: string } }, @Body() authResetPasswordDto: AuthResetPasswordDto) {
+    if (request.user == null || request.user.type !== 'reset-password') {
+      throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
+    }
+    authResetPasswordDto.sub = request.user.sub
+    return this._authService.resetPassword(authResetPasswordDto)
   }
 }

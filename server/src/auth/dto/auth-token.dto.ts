@@ -21,9 +21,9 @@ export class AuthForgotPasswordDto {
 // DTO for resetting password using a token
 export class AuthResetPasswordDto {
   /**
-   * @description DTO: The JWT token used to verify the user's identity and authorization to reset the password.
+   * @description DTO: the id of the user associated with the JWT token. This is used to identify the user for whom the password reset is being performed.
    */
-  token: AuthTokenDto
+  sub: number
 
   /**
    * @description DTO: The new password must be at least 8 characters long.
