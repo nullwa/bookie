@@ -50,9 +50,8 @@ export class AuthService {
     if (!user)
       throw new UnauthorizedException('Registration failed: unable to create user')
 
-    const token = this._jwtService.sign({ sub: user.uid, email: user.email, role: user.role, abilities: user.abilities })
-    await this._mailService.sendMail({ user_name: user.getFullName(), user_email: user.email, subject: 'Verify your email!', content: 'verify-email.template.hbs', token: token, tokenExpires: 24 })
-    return { token }
+    this.sendVerificationEmail(user.email)
+    return this.login({ email: authRegisterDto.email, password: authRegisterDto.password })
   }
 
   /**

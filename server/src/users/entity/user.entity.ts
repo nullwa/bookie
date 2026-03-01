@@ -74,7 +74,7 @@ export class User {
   /**
    * @description The verifiedAt column is used to track when a user's email has been verified
    */
-  @Column({ name: 'u-verified-at', type: 'timestamp', nullable: true, default: null })
+  @Column({ name: 'u-verified-at', type: 'datetime', nullable: true, default: null })
   verfiedAt: Date
   //</editor-fold>
 
