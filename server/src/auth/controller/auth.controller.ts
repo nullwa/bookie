@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UnauthorizedException } from '@nestjs/common'
+import { Body, Controller, Get, Post, Patch, Req, Query, UnauthorizedException } from '@nestjs/common'
 
 import { AuthService } from '@/auth/service/auth.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
@@ -54,8 +54,11 @@ export class AuthController {
   }
 
   /**
-   * 
-   * @returns 
+   * @description reset the password for the user associated with the JWT token
+   * @param request
+   * @param authResetPasswordDto 
+   * @returns the password has been reset or not
+   * @throws UnauthorizedException if the token is invalid or missing
    */
   @Post('reset-password')
   resetPassword(@Req() request: Request & { user: { sub: number, email: string, type: string } }, @Body() authResetPasswordDto: AuthResetPasswordDto) {
@@ -64,5 +67,26 @@ export class AuthController {
     }
     authResetPasswordDto.sub = request.user.sub
     return this._authService.resetPassword(authResetPasswordDto)
+  }
+
+  /**
+   * @description send a verification email to the requesting email
+   * @param email
+   */
+  @Post('verify-email')
+  verifyEmail(@Query('email') email: string) {
+    return this._authService.sendVerificationEmail(email)
+  }
+
+  /**
+   * @description confirm the email for the user associated with the JWT token
+   * @param request
+   */
+  @Patch('confirm-email')
+  confirmEmail(@Req() request: Request & { user: { sub: number, email: string, type: string } }) {
+    if (request.user == null || request.user.type !== 'verify-email') {
+      throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
+    }
+    return this._authService.confirmVerficationEmail(request.user.sub)
   }
 }

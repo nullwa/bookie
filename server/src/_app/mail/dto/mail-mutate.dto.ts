@@ -12,7 +12,7 @@ export class MailMutateDto {
   subject: string
 
   @IsString()
-  content: 'reset-password.template.hbs' | 'welcome.template.hbs'
+  content: 'reset-password.template.hbs' | 'welcome.template.hbs' | 'verify-email.template.hbs'
 
   @IsString()
   token: string

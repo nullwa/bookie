@@ -50,7 +50,9 @@ export class AuthService {
     if (!user)
       throw new UnauthorizedException('Registration failed: unable to create user')
 
-    return this.login({ email: authRegisterDto.email, password: authRegisterDto.password })
+    const token = this._jwtService.sign({ sub: user.uid, email: user.email, role: user.role, abilities: user.abilities })
+    await this._mailService.sendMail({ user_name: user.getFullName(), user_email: user.email, subject: 'Verify your email!', content: 'verify-email.template.hbs', token: token, tokenExpires: 24 })
+    return { token }
   }
 
   /**
@@ -62,7 +64,7 @@ export class AuthService {
     const user = await this._usersService.findByEmail(authForgotPasswordDto.email)
 
     if (!user)
-      return { message: 'An account with this email does not exist.' }
+      throw new UnauthorizedException('User with this email does not exist')
 
     const resetToken: string = this._jwtService.sign({ sub: user.uid, email: user.email, type: 'reset-password' }, { expiresIn: `${this._configService.get<number>('MAIL_RESET_PASSWORD_VALIDITY') || 1}${this._configService.get<string>('MAIL_RESET_PASSWORD_VALIDITY_UNIT') || 'h'}` as StringValue })
     await this._mailService.sendMail({ user_name: user.getFullName(), user_email: user.email, subject: 'Password Reset', content: 'reset-password.template.hbs', token: resetToken, tokenExpires: this._configService.get<number>('MAIL_RESET_PASSWORD_VALIDITY') || 1 })
@@ -82,7 +84,32 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token: user not found')
 
     user.password = resetAuthDto.password
-    const userUpdated = await this._usersService.update(user.uid, user)
+    await this._usersService.update(user.uid, user)
     return { message: 'Password has been reset successfully.' }
+  }
+
+  /**
+   * @description Sends a verification email to the user associated with the provided email address, containing a JWT token for email verification.
+   * @param email
+   * @returns An object containing a message indicating that the verification email has been sent.
+   */
+  public sendVerificationEmail = async (email: string): Promise<{ message: string }> => {
+    const user = await this._usersService.findByEmail(email)
+    if (!user)
+      throw new UnauthorizedException('User with this email does not exist')
+
+    const token = this._jwtService.sign({ sub: user.uid, email: user.email, type: 'verify-email' }, { expiresIn: `${this._configService.get<number>('MAIL_VERIFY_EMAIL_VALIDITY') || 24}${this._configService.get<string>('MAIL_VERIFY_EMAIL_VALIDITY_UNIT') || 'h'}` as StringValue })
+    await this._mailService.sendMail({ user_name: user.getFullName(), user_email: user.email, subject: 'Verify your email!', content: 'verify-email.template.hbs', token, tokenExpires: this._configService.get<number>('MAIL_VERIFY_EMAIL_VALIDITY') || 24 })
+    return { message: 'Verification email sent successfully.' }
+  }
+
+
+  public confirmVerficationEmail = async (userid: number): Promise<{ message: string }> => {
+    const user = await this._usersService.findOne(userid)
+    if (!user)
+      throw new UnauthorizedException('User not found')
+    user.verfiedAt = new Date()
+    await this._usersService.update(user.uid, user)
+    return { message: 'Email has been verified successfully.' }
   }
 }
