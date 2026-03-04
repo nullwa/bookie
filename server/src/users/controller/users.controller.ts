@@ -35,6 +35,16 @@ export class UsersController {
     return this.usersService.findAll(userQueryDto)
   }
 
+    /**
+   * @description This method retrieves a single user by their employee code.
+   * @param code
+    * @returns The user object corresponding to the provided employee code, or null if no user is found.
+    */
+  @Get('employee/:code')
+  findByEmployeeCode(@Param('code') code: string) {
+    return this.usersService.findByEmployeeCode(code)
+  }
+  
   /**
    * @description This method retrieves a single user by their unique identifier (id).
    * @param id

@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Check, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, TableInheritance, OneToOne, JoinColumn } from 'typeorm'
+import { Check, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToOne, JoinColumn, BeforeInsert, BeforeUpdate } from 'typeorm'
 import { hash } from 'bcrypt'
 
 import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
@@ -6,7 +6,6 @@ import { eUserAbility, eUserRole } from '@/_app/constants/enum'
 import { Employee } from './employees.entity'
 
 @Entity({ name: 'dbo-users' })
-@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class User {
   //<editor-fold desc="Properties">
   /**
@@ -72,6 +71,20 @@ export class User {
    */
   @DeleteDateColumn({ name: 'u-deleted-at' })
   deletedAt: Date
+
+  /**
+   * @description represents a one-to-one relationship between the User entity and the Employee entity
+   * Each user can be associated with one employee, and each employee can be associated with one user
+   * The relationship is defined using the @OneToOne decorator, which specifies the target entity (Employee) and the inverse side of the relationship (employee.user)
+   */
+  @OneToOne(() => Employee, (employee) => employee.user, {
+    lazy: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn()
+  employee: Employee;
 
   //</editor-fold>
 
@@ -145,14 +158,4 @@ export class User {
     this.abilities = this.abilities.filter(a => a !== ability)
     return true
   }
-  
-  @OneToOne(() => Employee, (employee) => employee.user, {
-    eager: false,
-    cascade: true,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-@JoinColumn()
-employee: Employee;
-  
 }
