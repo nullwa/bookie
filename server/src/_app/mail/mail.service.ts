@@ -7,7 +7,7 @@ import { MailMutateDto } from '@/_app/mail/dto/mail-mutate.dto'
 export enum MailTemplate {
   RESET_PASSWORD = 'reset-password.template.hbs',
   VERIFY_EMAIL = 'verify-email.template.hbs',
-  WELCOME = 'welcome.template.hbs'
+  WELCOME = 'welcome.template.hbs',
 }
 
 @Injectable()
@@ -17,12 +17,11 @@ export class MailService {
 
   constructor(
     private readonly _mailerService: MailerService,
-    private readonly _configService: ConfigService
+    private readonly _configService: ConfigService,
   ) {
     const frontendUrl = this._configService.get<string>('MAIL_FRONTEND_URL')
 
-    if (!frontendUrl)
-      throw new Error('MAIL_FRONTEND_URL is not defined in environment variables')
+    if (!frontendUrl) throw new Error('MAIL_FRONTEND_URL is not defined in environment variables')
 
     this._frontendUrl = frontendUrl
   }
@@ -38,7 +37,7 @@ export class MailService {
         to: mailMutateDto.user_email,
         subject: mailMutateDto.subject,
         template: mailMutateDto.content,
-        context
+        context,
       })
     } catch (error) {
       this._logger.error(`Failed to send email to ${mailMutateDto.user_email}`, error?.stack)
@@ -82,7 +81,7 @@ export class MailService {
   /**
    * @description Builds a URL link for the email template based on the provided path and token.
    * @param path
-   * @param token 
+   * @param token
    * @returns A string containing the full URL link for the email template, or undefined if the token is not provided.
    */
   private buildLink(path: string, token?: string): string | undefined {

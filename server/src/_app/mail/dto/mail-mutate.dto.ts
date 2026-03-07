@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from "class-validator"
+import { IsNumber, IsOptional, IsString } from 'class-validator'
 
 // DTO for email sending
 export class MailMutateDto {

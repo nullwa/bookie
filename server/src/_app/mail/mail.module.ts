@@ -19,21 +19,20 @@ import { join } from 'path'
           auth: {
             user: config.get<string>('MAIL_USER'),
             pass: config.get<string>('MAIL_PASS'),
-          }
+          },
         },
         defaults: {
-          from: `"${config.get<string>('MAIL_FROM_NAME')}" <${config.get<string>('MAIL_FROM_EMAIL')}>`
+          from: `"${config.get<string>('MAIL_FROM_NAME')}" <${config.get<string>('MAIL_FROM_EMAIL')}>`,
         },
         template: {
           dir: join(__dirname, 'templates'),
           adapter: new HandlebarsAdapter(),
           options: { strict: true },
-        }
-      })
-    })
+        },
+      }),
+    }),
   ],
   providers: [MailService],
-  exports: [MailService]
+  exports: [MailService],
 })
-
-export class MailModule { }
+export class MailModule {}

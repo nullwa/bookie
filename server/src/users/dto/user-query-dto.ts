@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, Min } from "class-validator"
+import { IsNumber, IsOptional, IsString, Min } from 'class-validator'
 import { Type } from 'class-transformer'
 
 // DTO: The RequestUserQueryDto class defines the structure and validation rules for querying users with pagination, sorting, and filtering options.

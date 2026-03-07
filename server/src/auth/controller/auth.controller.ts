@@ -8,16 +8,16 @@ import { Public } from '@/_app/decorators/public.decorator'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly _authService: AuthService) { }
+  constructor(private readonly _authService: AuthService) {}
 
   /**
    * @description return the user associated with the JWT token
    * @param request
-   * @returns The user object associated with the JWT token. 
+   * @returns The user object associated with the JWT token.
    */
   @Get()
-  me(@Req() request: Request & { user: { sub: number, email: string, role: string, abilities: string[] } }) {
-    return request.user;
+  me(@Req() request: Request & { user: { sub: number; email: string; role: string; abilities: string[] } }) {
+    return request.user
   }
 
   /**
@@ -56,12 +56,12 @@ export class AuthController {
   /**
    * @description reset the password for the user associated with the JWT token
    * @param request
-   * @param authResetPasswordDto 
+   * @param authResetPasswordDto
    * @returns the password has been reset or not
    * @throws UnauthorizedException if the token is invalid or missing
    */
   @Post('reset-password')
-  resetPassword(@Req() request: Request & { user: { sub: number, email: string, type: string } }, @Body() authResetPasswordDto: AuthResetPasswordDto) {
+  resetPassword(@Req() request: Request & { user: { sub: number; email: string; type: string } }, @Body() authResetPasswordDto: AuthResetPasswordDto) {
     if (request.user == null || request.user.type !== 'reset-password') {
       throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
     }
@@ -83,7 +83,7 @@ export class AuthController {
    * @param request
    */
   @Patch('confirm-email')
-  confirmEmail(@Req() request: Request & { user: { sub: number, email: string, type: string } }) {
+  confirmEmail(@Req() request: Request & { user: { sub: number; email: string; type: string } }) {
     if (request.user == null || request.user.type !== 'verify-email') {
       throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
     }

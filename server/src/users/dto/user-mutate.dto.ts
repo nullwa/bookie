@@ -1,8 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/mapped-types'
 import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray } from 'class-validator'
 
 import { eUserRole } from '@/_app/constants/enum'
-import { eUserAbility } from '@/_app/constants/enum';
+import { eUserAbility } from '@/_app/constants/enum'
 
 // DTO: The UserCreateDto class defines the structure and validation rules for creating a new user.
 export class UserCreateDto {
@@ -40,8 +40,8 @@ export class UserCreateDto {
 // DTO: The UserUpdateDto class extends the UserCreateDto class, making all properties optional for update operations.
 export class UserUpdateDto extends PartialType(UserCreateDto) {
   /**
-    * @description DTO: The abilities of the user, which is a many-to-many relationship with the Ability entity
-    */
+   * @description DTO: The abilities of the user, which is a many-to-many relationship with the Ability entity
+   */
   @IsArray()
   @IsOptional()
   @IsEnum(eUserAbility, { each: true, message: 'this ability is not valid' })

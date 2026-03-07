@@ -15,9 +15,6 @@ import { DatabaseModule } from '@/_app/database/database.module'
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), DatabaseModule, UsersModule, AuthModule, MailModule],
   controllers: [],
-  providers: [
-    { provide: APP_GUARD, useClass: AuthGuard }
-  ]
+  providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
-export class AppModule {
-}
+export class AppModule {}

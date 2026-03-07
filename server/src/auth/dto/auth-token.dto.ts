@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength } from "class-validator";
+import { IsEmail, IsString, MinLength } from 'class-validator'
 
 // DTO for returning the JWT token after successful authentication
 export class AuthTokenDto {

@@ -1,4 +1,4 @@
-import { eUserAbility, eUserRole } from '@/_app/constants/enum';
+import { eUserAbility, eUserRole } from '@/_app/constants/enum'
 
 /**
  * @description The number of salt rounds to use when hashing passwords with bcrypt.
@@ -6,7 +6,6 @@ import { eUserAbility, eUserRole } from '@/_app/constants/enum';
  * The default value is 10, but you can adjust it based on your security requirements and performance needs.
  */
 export const SALT_ROUND = 12
-
 
 /**
  * @description A mapping of user roles to their corresponding abilities. This is used to define what actions each role can perform in the application.
@@ -40,9 +39,6 @@ export const ROLE_ABILITIES: Record<string, string[]> = {
     eUserAbility.BOOKING_VIEW,
     eUserAbility.BOOKING_CANCEL,
   ],
-  [eUserRole.CLIENT]: [
-    eUserAbility.BOOKING_VIEW,
-    eUserAbility.BOOKING_CANCEL,
-  ],
+  [eUserRole.CLIENT]: [eUserAbility.BOOKING_VIEW, eUserAbility.BOOKING_CANCEL],
   [eUserRole.GUEST]: [],
-};
+}

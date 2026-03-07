@@ -19,16 +19,13 @@ import { AuthController } from '@/auth/controller/auth.controller'
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('AUTH_JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get<StringValue>('AUTH_JWT_EXPIRATION', '1d')
+          expiresIn: configService.get<StringValue>('AUTH_JWT_EXPIRATION', '1d'),
         },
       }),
     }),
-    MailModule
+    MailModule,
   ],
   providers: [AuthService],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
-
-export class AuthModule {
-}
-
+export class AuthModule {}
