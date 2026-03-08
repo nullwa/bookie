@@ -27,14 +27,14 @@ export class Employee {
   /**
    * @description The phone number of the employee, which can be used for contact purposes
    */
-  @Column({ name: 'ue-phone-number', unique: true })
-  phoneNumber: string
+  @Column({ name: 'ue-phone', unique: true })
+  phone: string
 
   /**
    * @description The hire date of the employee, which indicates when the employee started working for the company
    */
-  @Column({ name: 'ue-hire-date', type: 'datetime', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
-  hireDate: Date
+  @Column({ name: 'ue-hired-at', type: 'datetime', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
+  hiredAt: Date
   //#endregion
 
   //#region Relations
