@@ -3,6 +3,7 @@ import { FindManyOptions, Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { User } from '@/users/entity/user.entity'
+import { Employee } from '@/users/entity/employees.entity'
 
 import { RequestUserQueryDto } from '@/users/dto/user-query-dto'
 import { UserCreateDto, UserUpdateDto } from '@/users/dto/user-mutate.dto'
@@ -10,7 +11,10 @@ import { parseParamValue, parseOrderBy, mapSortDirection, parseKeyValue } from '
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private _userRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private _userRepository: Repository<User>,
+    @InjectRepository(Employee) private _employeeRepository: Repository<Employee>
+  ) { }
 
   /**
    * @description Create a new user
@@ -130,4 +134,17 @@ export class UsersService {
 
     return user
   }
+
+  public findByEmployeeCode = async (code: string): Promise<User | null> => {
+    const employee = await this._userRepository.findOne({
+      where: { employee: { code } },
+      relations: ['employee'],
+    })
+    if (!employee)
+      throw new NotFoundException(`User with employee code ${code} not found`)
+
+    return employee
+    
+  }
+} 
 }

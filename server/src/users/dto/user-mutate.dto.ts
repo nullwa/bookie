@@ -1,3 +1,5 @@
+import { PartialType } from '@nestjs/mapped-types';
+import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray, IsString, IsDate } from 'class-validator'
 import { PartialType } from '@nestjs/mapped-types'
 import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray } from 'class-validator'
 
@@ -35,6 +37,9 @@ export class UserCreateDto {
    */
   @IsEnum(eUserRole)
   role: eUserRole = eUserRole.GUEST
+
+  @IsOptional()
+  employee?: Partial<EmployeeCreateDto>
 }
 
 // DTO: The UserUpdateDto class extends the UserCreateDto class, making all properties optional for update operations.
@@ -46,4 +51,21 @@ export class UserUpdateDto extends PartialType(UserCreateDto) {
   @IsOptional()
   @IsEnum(eUserAbility, { each: true, message: 'this ability is not valid' })
   abilities: eUserAbility[]
+}
+
+class EmployeeCreateDto {
+
+  @IsNotEmpty({ message: 'Employee code must not be empty' })
+  @IsString({ message: 'Employee code must be a string' })
+  code: string
+
+  @IsNotEmpty({ message: 'Phone number must not be empty' })
+  @MinLength(8, { message: 'Phone number must be at least 8 characters long' })
+  phoneNumber: string
+
+  @IsOptional()
+  position: boolean= false
+
+  @IsDate({ message: 'Hire date must be a valid date' })
+  hireDate: Date
 }
