@@ -2,19 +2,19 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { FindManyOptions, Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import { User } from '@/users/entity/user.entity'
-import { Employee } from '@/users/entity/employees.entity'
+import { User } from '@/user/entity/user.entity'
+import { Employee } from '@/user/entity/employee.entity'
 
-import { RequestUserQueryDto } from '@/users/dto/user-query-dto'
-import { UserCreateDto, UserUpdateDto } from '@/users/dto/user-mutate.dto'
+import { RequestUserQueryDto } from '@/user/dto/user-query-dto'
+import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 import { parseParamValue, parseOrderBy, mapSortDirection, parseKeyValue } from '@/_app/constants/helper'
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private _userRepository: Repository<User>,
-    @InjectRepository(Employee) private _employeeRepository: Repository<Employee>
-  ) { }
+    @InjectRepository(Employee) private _employeeRepository: Repository<Employee>,
+  ) {}
 
   /**
    * @description Create a new user
@@ -140,11 +140,8 @@ export class UsersService {
       where: { employee: { code } },
       relations: ['employee'],
     })
-    if (!employee)
-      throw new NotFoundException(`User with employee code ${code} not found`)
+    if (!employee) throw new NotFoundException(`User with employee code ${code} not found`)
 
     return employee
-    
   }
-} 
 }

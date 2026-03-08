@@ -5,7 +5,7 @@ import { compare } from 'bcrypt'
 import type { StringValue } from 'ms'
 
 import { MailService } from '@/_app/mail/mail.service'
-import { UsersService } from '@/users/service/users.service'
+import { UsersService } from '@/user/service/user.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
 import { AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
 

@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 
-import { UsersService } from '@/users/service/users.service'
-import { RequestUserQueryDto } from '@/users/dto/user-query-dto'
-import { UserCreateDto, UserUpdateDto } from '@/users/dto/user-mutate.dto'
+import { UsersService } from '@/user/service/user.service'
+import { RequestUserQueryDto } from '@/user/dto/user-query-dto'
+import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 
 import { Public } from '@/_app/decorators/public.decorator'
 import { Roles } from '@/_app/decorators/role.decorator'
@@ -35,16 +35,16 @@ export class UsersController {
     return this.usersService.findAll(userQueryDto)
   }
 
-    /**
+  /**
    * @description This method retrieves a single user by their employee code.
    * @param code
-    * @returns The user object corresponding to the provided employee code, or null if no user is found.
-    */
+   * @returns The user object corresponding to the provided employee code, or null if no user is found.
+   */
   @Get('employee/:code')
   findByEmployeeCode(@Param('code') code: string) {
     return this.usersService.findByEmployeeCode(code)
   }
-  
+
   /**
    * @description This method retrieves a single user by their unique identifier (id).
    * @param id

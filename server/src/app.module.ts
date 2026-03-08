@@ -8,12 +8,13 @@ import { ConfigModule } from '@nestjs/config'
 import { AuthGuard } from '@/_app/guards/auth-guard.guard'
 
 import { AuthModule } from '@/auth/auth.module'
-import { UsersModule } from '@/users/users.module'
+import { UsersModule } from '@/user/user.module'
 import { MailModule } from '@/_app/mail/mail.module'
 import { DatabaseModule } from '@/_app/database/database.module'
+import { BusinessModule } from './business/business.module'
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), DatabaseModule, UsersModule, AuthModule, MailModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), DatabaseModule, UsersModule, AuthModule, MailModule, BusinessModule],
   controllers: [],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })

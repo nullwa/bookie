@@ -1,7 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray, IsString, IsDate } from 'class-validator'
 import { PartialType } from '@nestjs/mapped-types'
-import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray } from 'class-validator'
+import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray, IsString, IsDate } from 'class-validator'
+import { Type } from 'class-transformer'
 
 import { eUserRole } from '@/_app/constants/enum'
 import { eUserAbility } from '@/_app/constants/enum'
@@ -38,7 +37,11 @@ export class UserCreateDto {
   @IsEnum(eUserRole)
   role: eUserRole = eUserRole.GUEST
 
+  /**
+   * @description DTO: The abilities of the user, which is a many-to-many relationship with the Ability entity
+   */
   @IsOptional()
+  @Type(() => EmployeeCreateDto)
   employee?: Partial<EmployeeCreateDto>
 }
 
@@ -53,19 +56,31 @@ export class UserUpdateDto extends PartialType(UserCreateDto) {
   abilities: eUserAbility[]
 }
 
+// DTO: The EmployeeCreateDto class defines the structure and validation rules for creating a new employee, which is a nested object within the UserCreateDto.
 class EmployeeCreateDto {
-
+  /**
+   * @description DTO: The employee code must not be empty and must be a string.
+   */
   @IsNotEmpty({ message: 'Employee code must not be empty' })
   @IsString({ message: 'Employee code must be a string' })
   code: string
 
+  /**
+   * @description DTO: The phone number must not be empty and must be at least 8 characters long.
+   */
   @IsNotEmpty({ message: 'Phone number must not be empty' })
   @MinLength(8, { message: 'Phone number must be at least 8 characters long' })
   phoneNumber: string
 
+  /**
+   * @description DTO: The position of the employee, which is a boolean indicating whether the employee holds a position or not. It is optional and defaults to false.
+   */
   @IsOptional()
-  position: boolean= false
+  position: boolean = false
 
+  /**
+   * @description DTO: The hire date must be a valid date. It is optional and defaults to the current date if not provided.
+   */
   @IsDate({ message: 'Hire date must be a valid date' })
   hireDate: Date
 }

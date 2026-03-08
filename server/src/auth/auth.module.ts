@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import type { StringValue } from 'ms'
 
 import { MailModule } from '@/_app/mail/mail.module'
-import { UsersModule } from '@/users/users.module'
+import { UsersModule } from '@/user/user.module'
 
 import { AuthService } from '@/auth/service/auth.service'
 import { AuthController } from '@/auth/controller/auth.controller'
