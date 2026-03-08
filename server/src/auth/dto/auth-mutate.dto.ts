@@ -1,5 +1,5 @@
 import { IsEmail, IsString, MinLength, IsEnum, IsNotEmpty } from 'class-validator'
-import { eUserRole } from "@/_app/constants/enum"
+import { eUserRole } from '@/_app/constants/enum'
 
 // DTO for user login
 export class AuthLoginDto {

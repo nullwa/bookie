@@ -11,7 +11,7 @@ import { Abilities } from '@/_app/decorators/abilities.decorator'
 @Public()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   /**
    * @description This method is responsible for creating a new user.
@@ -27,7 +27,7 @@ export class UsersController {
 
   /**
    * @description This method retrieves a paginated list of users based on the provided query parameters.
-   * @param userQueryDto 
+   * @param userQueryDto
    * @returns An object containing the list of users and pagination metadata.
    */
   @Get()
@@ -58,7 +58,7 @@ export class UsersController {
   /**
    * @description This method updates an existing user's information based on their unique identifier (id) and the provided update data.
    * @param id
-   * @param userUpdateDto 
+   * @param userUpdateDto
    * @returns The updated user object after the update operation is performed, or null if the update fails or the user is not found.
    */
   @Patch(':id')

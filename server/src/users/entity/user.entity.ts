@@ -86,6 +86,10 @@ export class User {
   @JoinColumn()
   employee: Employee;
 
+   * @description The verifiedAt column is used to track when a user's email has been verified
+   */
+  @Column({ name: 'u-verified-at', type: 'datetime', nullable: true, default: null })
+  verfiedAt: Date
   //</editor-fold>
 
   //<editor-fold desc="Methods">
@@ -105,8 +109,7 @@ export class User {
   @BeforeInsert()
   @BeforeUpdate()
   public hashPassword = async (): Promise<void> => {
-    if (this.password)
-      this.password = await hash(this.password, SALT_ROUND)
+    if (this.password) this.password = await hash(this.password, SALT_ROUND)
   }
 
   /**
@@ -123,16 +126,16 @@ export class User {
         break
       case eUserRole.BUSINESS_OWNER:
         this.abilities = ROLE_ABILITIES[eUserRole.BUSINESS_OWNER] as eUserAbility[]
-        break;
+        break
       case eUserRole.BUSINESS_STUFF:
         this.abilities = ROLE_ABILITIES[eUserRole.BUSINESS_STUFF] as eUserAbility[]
-        break;
+        break
       case eUserRole.CLIENT:
         this.abilities = ROLE_ABILITIES[eUserRole.CLIENT] as eUserAbility[]
-        break;
+        break
       case eUserRole.GUEST:
       default:
-        break;
+        break
     }
   }
 
@@ -155,7 +158,8 @@ export class User {
    */
   public removeAbility = (ability: eUserAbility): boolean => {
     if (!this.abilities || !this.abilities.includes(ability)) return false
-    this.abilities = this.abilities.filter(a => a !== ability)
+    this.abilities = this.abilities.filter((a) => a !== ability)
     return true
   }
+  //</editor-fold>
 }

@@ -1,0 +1,23 @@
+import { IsNumber, IsOptional, IsString } from 'class-validator'
+
+// DTO for email sending
+export class MailMutateDto {
+  @IsString()
+  user_name: string
+
+  @IsString()
+  user_email: string
+
+  @IsString()
+  subject: string
+
+  @IsString()
+  content: 'reset-password.template.hbs' | 'welcome.template.hbs' | 'verify-email.template.hbs'
+
+  @IsString()
+  token: string
+
+  @IsNumber()
+  @IsOptional()
+  tokenExpires: number = 2
+}

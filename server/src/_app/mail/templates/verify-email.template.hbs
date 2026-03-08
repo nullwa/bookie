@@ -1,0 +1,158 @@
+<html lang='en'>
+
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>Verify Your Email</title>
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f9f9f9;
+        font-family: 'Inter', Helvetica, sans-serif;
+      }
+
+      img {
+        border: 0;
+        display: block;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      @media (max-width: 640px) {
+        .wrapper {
+          width: 100% !important;
+        }
+
+        .pad {
+          padding: 0 20px !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <table width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#f9f9f9'>
+      <tr>
+        <td align='center'>
+          <table width='640' class='wrapper' cellspacing='0' cellpadding='0' border='0' style='max-width:640px;'>
+            <tr>
+              <td>
+
+                <!-- HEADER -->
+                <table width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#e8f2fc'>
+                  <tr>
+                    <td class='pad' style='padding: 20px 50px;'>
+                      <img src='https://bucket.mailersendapp.com/vywj2lpvkjl7oqzd/2351ndgwr4zqx8ko/images/9234ba12-91e7-4753-86a6-d0acd5c7dbe5.png' alt='{{appName}}' width='108' />
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- TITLE -->
+                <table width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#e8f2fc'>
+                  <tr>
+                    <td class='pad' style='padding: 0 50px 24px;'>
+                      <h1 style='font-size:24px; font-weight:700; color:#111111;'>
+                        Verify your
+                        <span style='color:#1966FF;'>email address</span>
+                      </h1>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- BODY -->
+                <table width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#ffffff'>
+                  <tr>
+                    <td class='pad' style='padding: 40px 50px 30px;'>
+                      <p style='font-size:20px; font-weight:700; color:#111111; margin:24px 0 12px;'>
+                        Welcome,
+                        {{name}}!
+                      </p>
+
+                      <p style='font-size:14px; color:#111111; line-height:1.7;'>
+                        Thanks for signing up for
+                        {{appName}}. Please confirm your email address by clicking the button below.
+                        <strong>This verification link is valid for the next {{tokenExpires}} hours.</strong>
+                      </p>
+
+                      <table cellspacing='0' cellpadding='0' border='0' style='margin-top:28px; border-collapse:separate;'>
+                        <tr>
+                          <td style='background:#1966FF; border-radius:4px;'>
+                            <a
+                              href='{{verifyLink}}'
+                              target='_blank'
+                              style="display:block; padding:14px 28px; margin:0px auto; color:#ffffff; font-size:14px; font-weight:600; text-decoration:none; white-space:nowrap; font-family:'Inter',Helvetica,sans-serif;"
+                            >
+                              Verify Email
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <p style='font-size:13px; color:#555555; line-height:1.6; margin-top:24px;'>
+                        If you did not create an account, you can safely ignore this email.
+                      </p>
+
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- DIVIDER -->
+                <table width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#ffffff'>
+                  <tr>
+                    <td style='padding: 0 50px;'>
+                      <hr style='border:none; border-top:1px solid #eeeeee; margin:0;' />
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- FOOTER -->
+                <table width='100%' cellspacing='0' cellpadding='0' border='0'>
+                  <tr>
+                    <td height='32'></td>
+                  </tr>
+                  <tr>
+                    <td align='center'>
+                      <img src='https://bucket.mailersendapp.com/vywj2lpvkjl7oqzd/2351ndgwr4zqx8ko/images/9236a021-9572-4415-8419-c4b563916b8b.png' alt='{{appName}}' width='81' style='display:inline-block;' />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td height='16'></td>
+                  </tr>
+                  <tr>
+                    <td align='center' style="font-size:13px; color:#A2A9B0; font-family:'Inter',Helvetica,sans-serif;">
+                      <a href='#' style='color:#A2A9B0; text-decoration:none;'>Terms</a>
+                      &nbsp;|&nbsp;
+                      <a href='#' style='color:#A2A9B0; text-decoration:none;'>Privacy</a>
+                      &nbsp;|&nbsp;
+                      <a href='#' style='color:#A2A9B0; text-decoration:none;'>Preferences</a>
+                      &nbsp;|&nbsp;
+                      <a href='#' style='color:#A2A9B0; text-decoration:none;'>Help center</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td height='12'></td>
+                  </tr>
+                  <tr>
+                    <td align='center' style="font-size:13px; color:#A2A9B0; font-family:'Inter',Helvetica,sans-serif;">
+                      &copy;
+                      {{year}}
+                      {{appName}}. All rights reserved.
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+
+</html>
