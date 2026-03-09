@@ -12,8 +12,8 @@ import { parseParamValue, parseOrderBy, mapSortDirection, parseKeyValue } from '
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private _userRepository: Repository<User>,
-    @InjectRepository(Employee) private _employeeRepository: Repository<Employee>,
+    @InjectRepository(User) private readonly _userRepository: Repository<User>,
+    @InjectRepository(Employee) private readonly _employeeRepository: Repository<Employee>,
   ) {}
 
   /**

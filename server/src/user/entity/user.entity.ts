@@ -86,7 +86,7 @@ export class User {
    * The relationship is defined using the @OneToOne decorator, which specifies the target entity (Employee) and the inverse side of the relationship (employee.user)
    */
   @OneToOne(() => Employee, (employee) => employee.user, { cascade: true, onDelete: 'CASCADE' })
-  @JoinColumn()
+  @JoinColumn({ name: 'ue-employee-uid' })
   employee: Employee
   //#endregion
 
