@@ -135,6 +135,12 @@ export class UsersService {
     return user
   }
 
+  /**
+   * @description Finds a user by their employee code.
+   * @param code
+   * @returns User | null
+   * @throws NotFoundException if the user with the specified employee code is not found.
+   */
   public findByEmployeeCode = async (code: string): Promise<User | null> => {
     const employee = await this._userRepository.findOne({
       where: { employee: { code } },

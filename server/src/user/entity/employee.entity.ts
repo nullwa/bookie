@@ -14,7 +14,7 @@ export class Employee {
   /**
    * @description The unique code for the employee, which can be used for identification purposes
    */
-  @Column({ name: 'ue-code' })
+  @Column({ name: 'ue-code', unique: true })
   code: string
 
   /**
