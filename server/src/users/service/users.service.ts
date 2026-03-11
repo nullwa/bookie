@@ -136,6 +136,12 @@ export class UsersService {
     return user
   }
 
+  /**
+   * @description Finds a user by their associated employee code. The method searches for a user whose related employee entity has the specified code. If no such user is found, a NotFoundException is thrown.
+   * @param code 
+   * @returns User
+   * @throws NotFoundException if the user with the specified employee code is not found.
+   */
   public findByEmployeeCode = async (code: string): Promise<User | null> => {
     const employee = await this._userRepository.findOne({
       where: { employee: { code } },

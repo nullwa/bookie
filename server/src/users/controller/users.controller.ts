@@ -22,8 +22,7 @@ export class UsersController {
   @Roles('ADMIN')
   @Abilities('TENANT_MOD')
   create(@Body() userCreateDto: UserCreateDto) {
-    return this.usersService.create(userCreateDto)
-  }
+    return this.usersService.create(userCreateDto)}
 
   /**
    * @description This method retrieves a paginated list of users based on the provided query parameters.
@@ -32,8 +31,7 @@ export class UsersController {
    */
   @Get()
   findAll(@Query() userQueryDto: RequestUserQueryDto) {
-    return this.usersService.findAll(userQueryDto)
-  }
+    return this.usersService.findAll(userQueryDto)}
 
     /**
    * @description This method retrieves a single user by their employee code.
@@ -42,8 +40,7 @@ export class UsersController {
     */
   @Get('employee/:code')
   findByEmployeeCode(@Param('code') code: string) {
-    return this.usersService.findByEmployeeCode(code)
-  }
+    return this.usersService.findByEmployeeCode(code)}
   
   /**
    * @description This method retrieves a single user by their unique identifier (id).
@@ -52,8 +49,7 @@ export class UsersController {
    */
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id)
-  }
+    return this.usersService.findOne(+id)}
 
   /**
    * @description This method updates an existing user's information based on their unique identifier (id) and the provided update data.
@@ -63,8 +59,7 @@ export class UsersController {
    */
   @Patch(':id')
   update(@Param('id') id: string, @Body() userUpdateDto: UserUpdateDto) {
-    return this.usersService.update(+id, userUpdateDto)
-  }
+    return this.usersService.update(+id, userUpdateDto)}
 
   /**
    * @description This method deletes a user based on their unique identifier (id)
@@ -73,6 +68,5 @@ export class UsersController {
    */
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id)
-  }
+    return this.usersService.remove(+id)}
 }

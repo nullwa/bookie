@@ -36,8 +36,11 @@ export class UserCreateDto {
   @IsEnum(eUserRole)
   role: eUserRole = eUserRole.GUEST
 
+   /**
+    * @description DTO: The abilities of the user, which is a many-to-many relationship with the Ability entity
+    */
   @IsOptional()
-  employee?: Partial<EmployeeCreateDto>
+  employee: Partial<EmployeeCreateDto>
 }
 
 // DTO: The UserUpdateDto class extends the UserCreateDto class, making all properties optional for update operations.
@@ -52,18 +55,29 @@ export class UserUpdateDto extends PartialType(UserCreateDto) {
 }
 
 class EmployeeCreateDto {
-
+   /**
+    * @description DTO: The employee code must not be empty and must be a string.
+    */
   @IsNotEmpty({ message: 'Employee code must not be empty' })
   @IsString({ message: 'Employee code must be a string' })
   code: string
 
+   /**
+    * @description DTO: The phone number must not be empty and must be at least 8 characters long.
+    */
   @IsNotEmpty({ message: 'Phone number must not be empty' })
   @MinLength(8, { message: 'Phone number must be at least 8 characters long' })
   phoneNumber: string
 
+   /**
+    * @description DTO: The position indicates whether the employee is an owner (true) or staff (false). It is optional and defaults to false if not provided.
+    */
   @IsOptional()
   position: boolean= false
 
+   /**
+    * @description DTO: The hire date must be a valid date and is required for creating an employee. It represents the date when the employee was hired.
+    */
   @IsDate({ message: 'Hire date must be a valid date' })
   hireDate: Date
 }
