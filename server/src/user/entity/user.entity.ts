@@ -4,6 +4,7 @@ import { hash } from 'bcrypt'
 import { Employee } from '@/user/entity/employee.entity'
 import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
 import { eUserAbility, eUserRole } from '@/_app/constants/enum'
+import { Customer } from './customer.entity'
 
 @Entity({ name: 'dbo-user' })
 export class User {
@@ -96,9 +97,9 @@ export class User {
    * Each user can be associated with one customer, and each customer can be associated with one user
    * The relationship is defined using the @OneToOne decorator, which specifies the target entity (Customer) and the inverse side of the relationship (customer.user)
    */
-  @OneToOne(() => Employee, (employee) => employee.user, { cascade: true, onDelete: 'CASCADE' })
+  @OneToOne(() => Customer, (customer) => customer.user, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'uc-customer-uid' })
-  customer: Employee
+  customer: Customer
   //#endregion
 
   //#region Methods
