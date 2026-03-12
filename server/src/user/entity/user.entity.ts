@@ -90,6 +90,17 @@ export class User {
   employee: Employee
   //#endregion
 
+  //#region Relations
+  /**
+   * @description represents a one-to-one relationship between the User entity and the Customer entity
+   * Each user can be associated with one customer, and each customer can be associated with one user
+   * The relationship is defined using the @OneToOne decorator, which specifies the target entity (Customer) and the inverse side of the relationship (customer.user)
+   */
+  @OneToOne(() => Employee, (employee) => employee.user, { cascade: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'uc-customer-uid' })
+  customer: Employee
+  //#endregion
+
   //#region Methods
   /**
    * @description Concatenates the first name and last name to return the full name of the user
