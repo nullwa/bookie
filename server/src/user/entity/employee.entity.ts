@@ -41,7 +41,7 @@ export class Employee {
   /**
    * @description The user associated with the employee, which represents the account information for the employee
    */
-  @OneToOne(() => User, (user) => user.employee, { cascade: true, onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.employee)
   user: User
   //#endregion
 }
