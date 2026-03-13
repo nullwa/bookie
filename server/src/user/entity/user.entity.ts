@@ -4,6 +4,7 @@ import { hash } from 'bcrypt'
 import { Employee } from '@/user/entity/employee.entity'
 import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
 import { eUserAbility, eUserRole } from '@/_app/constants/enum'
+import { Customer } from '@/user/entity/customer.entity'
 
 @Entity({ name: 'dbo-user' })
 export class User {
@@ -38,6 +39,12 @@ export class User {
   @Column({ name: 'u-password' })
   @Check(`CHAR_LENGTH(u_password) >= 8`)
   password: string
+
+  /**
+   * @description The phone number of the user, which can be used for contact purposes
+   */
+  @Column({ name: 'u-phone', unique: true })
+  phone: string
 
   /**
    * @description The role of the user, which can be one of the values defined in the eUserRole enum
@@ -88,6 +95,17 @@ export class User {
   @OneToOne(() => Employee, (employee) => employee.user, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'ue-employee-uid' })
   employee: Employee
+  //#endregion
+
+  //#region Relations
+  /**
+   * @description represents a one-to-one relationship between the User entity and the Customer entity
+   * Each user can be associated with one customer, and each customer can be associated with one user
+   * The relationship is defined using the @OneToOne decorator, which specifies the target entity (Customer) and the inverse side of the relationship (customer.user)
+   */
+  @OneToOne(() => Customer, (customer) => customer.user, { cascade: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'uc-customer-uid' })
+  customer: Customer
   //#endregion
 
   //#region Methods

@@ -25,12 +25,6 @@ export class Employee {
   position: boolean
 
   /**
-   * @description The phone number of the employee, which can be used for contact purposes
-   */
-  @Column({ name: 'ue-phone', unique: true })
-  phone: string
-
-  /**
    * @description The hire date of the employee, which indicates when the employee started working for the company
    */
   @Column({ name: 'ue-hired-at', type: 'datetime', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
