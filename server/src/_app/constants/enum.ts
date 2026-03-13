@@ -39,6 +39,7 @@ export enum eSortDirection {
   ASC = 'ASC',
   DESC = 'DESC',
 }
+
 /**
  * @description cGenderRole enum defines the possible gender roles for customer entities.
  */
