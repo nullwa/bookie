@@ -4,7 +4,7 @@ import { hash } from 'bcrypt'
 import { Employee } from '@/user/entity/employee.entity'
 import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
 import { eUserAbility, eUserRole } from '@/_app/constants/enum'
-import { Customer } from './customer.entity'
+import { Customer } from '@/user/entity/customer.entity'
 
 @Entity({ name: 'dbo-user' })
 export class User {
@@ -39,6 +39,12 @@ export class User {
   @Column({ name: 'u-password' })
   @Check(`CHAR_LENGTH(u_password) >= 8`)
   password: string
+
+  /**
+   * @description The phone number of the user, which can be used for contact purposes
+   */
+  @Column({ name: 'u-phone', unique: true })
+  phone: string
 
   /**
    * @description The role of the user, which can be one of the values defined in the eUserRole enum
