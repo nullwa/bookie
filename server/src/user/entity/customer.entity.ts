@@ -1,6 +1,7 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { User } from './user.entity'
-import { cGenderRole } from '@/_app/constants/enum'
+
+import { User } from '@/user/entity/user.entity'
+import { eGenderRole } from '@/_app/constants/enum'
 
 @Entity({ name: 'dbo-customer' })
 export class Customer {
@@ -23,7 +24,7 @@ export class Customer {
    * This column is nullable, as not all customers may choose to provide their gender, and it is of type enum to restrict the values to either 'MALE' or 'FEMALE'
    */
   @Column({ name: 'uc-gender', type: 'simple-array', nullable: true })
-  gender: cGenderRole[]
+  gender: eGenderRole[]
 
   /**
    * @description The address of the customer, which can be used for shipping and billing purposes

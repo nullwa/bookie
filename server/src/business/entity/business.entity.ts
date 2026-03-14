@@ -43,6 +43,13 @@ export class Business {
   taxIdentificationNumber: string
 
   /**
+   * @description A boolean flag indicating whether the business can have a loyalty program.
+   * This is used to determine if the business is eligible to offer loyalty rewards to its customers.
+   */
+  @Column({ name: 'b-can-have-loyalty-program' })
+  canHaveLoyaltyProgram: boolean = false
+
+  /**
    * @description The createdAt column is automatically managed by TypeORM
    */
   @CreateDateColumn({ name: 'b-created-at' })

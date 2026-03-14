@@ -2,9 +2,9 @@ import { Check, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGener
 import { hash } from 'bcrypt'
 
 import { Employee } from '@/user/entity/employee.entity'
-import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
-import { eUserAbility, eUserRole } from '@/_app/constants/enum'
 import { Customer } from '@/user/entity/customer.entity'
+import { eUserAbility, eUserRole } from '@/_app/constants/enum'
+import { SALT_ROUND, ROLE_ABILITIES } from '@/_app/constants/const'
 
 @Entity({ name: 'dbo-user' })
 export class User {

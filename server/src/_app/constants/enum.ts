@@ -41,9 +41,9 @@ export enum eSortDirection {
 }
 
 /**
- * @description cGenderRole enum defines the possible gender roles for customer entities.
+ * @description eGenderRole enum defines the possible gender roles for customer entities.
  */
-export enum cGenderRole {
+export enum eGenderRole {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
 }
