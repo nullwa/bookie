@@ -5,8 +5,6 @@ import { ConfigModule } from '@nestjs/config'
 /**
  * @description Services inside the application
  */
-import { AuthGuard } from '@/_app/guards/auth-guard.guard'
-
 import { AuthModule } from '@/auth/auth.module'
 import { UsersModule } from '@/user/user.module'
 import { MailModule } from '@/_app/mail/mail.module'
@@ -16,6 +14,5 @@ import { BusinessModule } from './business/business.module'
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), DatabaseModule, UsersModule, AuthModule, MailModule, BusinessModule],
   controllers: [],
-  providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}

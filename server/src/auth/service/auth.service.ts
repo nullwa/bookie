@@ -4,8 +4,9 @@ import { JwtService } from '@nestjs/jwt'
 import { compare } from 'bcrypt'
 import type { StringValue } from 'ms'
 
+import { User } from '@/user/entity/user.entity'
 import { MailService } from '@/_app/mail/mail.service'
-import { UsersService } from '@/user/service/user.service'
+import { UserService } from '@/user/service/user.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
 import { AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
 
@@ -13,13 +14,14 @@ import { AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-tok
 export class AuthService {
   constructor(
     private readonly _jwtService: JwtService,
-    private readonly _usersService: UsersService,
     private readonly _mailService: MailService,
     private readonly _configService: ConfigService,
+    private readonly _usersService: UserService,
   ) {}
 
   /**
    * @description Authenticates a user and returns a JWT token if the credentials are valid.
+   *
    * @param authLoginDto
    * @returns An object containing the JWT token.
    * @throws UnauthorizedException if the user is not found or the password is incorrect.
@@ -32,12 +34,12 @@ export class AuthService {
     const isValid = await compare(authLoginDto.password, user.password)
     if (!isValid) throw new UnauthorizedException('Invalid credentials: password does not match')
 
-    const token = this._jwtService.sign({ sub: user.uid, email: user.email, role: user.role, abilities: user.abilities })
-    return { token }
+    return this._generateJwtToken(user)
   }
 
   /**
    * @description Registers a new user using the provided registration data.
+   *
    * @param authRegisterDto
    * @returns token
    * @throws UnauthorizedException if the registration fails (e.g., unable to create user).
@@ -53,6 +55,7 @@ export class AuthService {
 
   /**
    * @description Initiates the password reset process by sending a password reset email to the user associated with the provided email address.
+   *
    * @param authForgotPasswordDto
    * @returns An object containing a message indicating that the password reset email has been sent.
    */
@@ -78,8 +81,9 @@ export class AuthService {
 
   /**
    * @description Resets the user's password using the provided reset password data, which includes a JWT token for authentication and the new password.
+   *
    * @param resetAuthDto
-   * @returns void
+   * @returns An object containing a message indicating that the password has been reset successfully.
    * @throws UnauthorizedException if the token is invalid or the user is not found.
    */
   public resetPassword = async (resetAuthDto: AuthResetPasswordDto): Promise<{ message: string }> => {
@@ -94,7 +98,8 @@ export class AuthService {
 
   /**
    * @description Sends a verification email to the user associated with the provided email address, containing a JWT token for email verification.
-   * @param email
+   *
+   * @param email The email address of the user to whom the verification email will be sent.
    * @returns An object containing a message indicating that the verification email has been sent.
    */
   public sendVerificationEmail = async (email: string): Promise<{ message: string }> => {
@@ -116,11 +121,43 @@ export class AuthService {
     return { message: 'Verification email sent successfully.' }
   }
 
+  /**
+   * @description Confirms the user's email verification by validating the provided user ID and updating the user's verified status in the database.
+   *
+   * @param userid The ID of the user whose email verification is being confirmed.
+   * @returns An object containing a message indicating that the email has been verified successfully.
+   * @throws UnauthorizedException if the user is not found.
+   */
   public confirmVerficationEmail = async (userid: number): Promise<{ message: string }> => {
     const user = await this._usersService.findOne(userid)
     if (!user) throw new UnauthorizedException('User not found')
     user.verfiedAt = new Date()
     await this._usersService.update(user.uid, user)
     return { message: 'Email has been verified successfully.' }
+  }
+
+  /**
+   * @description Issues a JWT for a user resolved by GoogleStrategy.
+   * Called from the controller after GoogleStrategy sets req.user.
+   *
+   * @param user - User entity resolved by validateGoogleUser()
+   * @returns    - Signed JWT token
+   */
+  public loginWithGoogle = (user: User): { token: string } => {
+    return this._generateJwtToken(user)
+  }
+
+  /**
+   * @description Generates a signed JWT from a User entity.
+   *
+   * The payload shape must stay consistent with JwtStrategy.validate()
+   * since that's what gets decoded and attached to req.user on each request.
+   *
+   * @param user - Fully resolved User entity from the database
+   * @returns    - { token } — the signed JWT string
+   */
+  private _generateJwtToken = (user: User): { token: string } => {
+    const token = this._jwtService.sign({ sub: user.uid, email: user.email, role: user.role, abilities: user.abilities })
+    return { token }
   }
 }

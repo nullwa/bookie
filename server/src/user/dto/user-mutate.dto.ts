@@ -38,6 +38,19 @@ export class UserCreateDto {
   role: eUserRole = eUserRole.GUEST
 
   /**
+   * @description DTO: The Google ID is an optional string that represents the user's Google account ID.
+   */
+  @IsString({ message: 'Google ID must be a string' })
+  googleId: string
+
+  /**
+   * @description DTO: The avatar is an optional string that represents the URL of the user's avatar image.
+   */
+  @IsOptional()
+  @IsString({ message: 'Avatar must be a string' })
+  avatar: string
+
+  /**
    * @description DTO: The abilities of the user, which is a many-to-many relationship with the Ability entity
    */
   @IsOptional()

@@ -43,7 +43,7 @@ export class User {
   /**
    * @description The phone number of the user, which can be used for contact purposes
    */
-  @Column({ name: 'u-phone', unique: true })
+  @Column({ name: 'u-phone', unique: true, nullable: true })
   phone: string
 
   /**
@@ -58,6 +58,18 @@ export class User {
    */
   @Column({ name: 'u-abilities', type: 'simple-array', nullable: true })
   abilities: eUserAbility[]
+
+  /**
+   * @description The googleId column is used to store the unique identifier for users who sign in with Google OAuth
+   */
+  @Column({ name: 'u-google-id', unique: true, nullable: true })
+  googleId: string
+
+  /**
+   * @description The avatar column is used to store the URL of the user's avatar image, which can be displayed in the user interface
+   */
+  @Column({ name: 'u-avatar', nullable: true })
+  avatar: string
 
   /**
    * @description The createdAt column is automatically managed by TypeORM
@@ -95,9 +107,7 @@ export class User {
   @OneToOne(() => Employee, (employee) => employee.user, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'ue-employee-uid' })
   employee: Employee
-  //#endregion
 
-  //#region Relations
   /**
    * @description represents a one-to-one relationship between the User entity and the Customer entity
    * Each user can be associated with one customer, and each customer can be associated with one user
@@ -111,6 +121,7 @@ export class User {
   //#region Methods
   /**
    * @description Concatenates the first name and last name to return the full name of the user
+   *
    * @returns The full name of the user as a string
    */
   public getFullName = (): string => {
@@ -120,6 +131,7 @@ export class User {
   /**
    * @description Hashes the user's password before inserting or updating the user entity in the database
    * This method is decorated with @BeforeInsert and @BeforeUpdate to ensure that the password is always hashed before being stored in the database
+   *
    * @returns A promise that resolves when the password has been hashed and updated in the user entity
    */
   @BeforeInsert()
@@ -132,6 +144,7 @@ export class User {
    * @description Generates the user's abilities based on their role after the user entity has been inserted into the database
    * This method is decorated with @AfterInsert to ensure that the abilities are generated after the user has been successfully inserted into the database
    * The abilities are assigned based on the user's role, with ADMIN having all abilities, BUSINESS_OWNER having a specific set of abilities, and BUSINESS_STUFF having a more limited set of abilities
+   *
    * @returns void
    */
   @BeforeInsert()
@@ -157,6 +170,7 @@ export class User {
 
   /**
    * @description Adds a new ability to the user's abilities array if it does not already exist
+   *
    * @param ability
    * @return true if the ability was added successfully, false if the ability already exists in the user's abilities array
    */
@@ -169,6 +183,7 @@ export class User {
 
   /**
    * @description Removes an ability from the user's abilities array if it exists
+   *
    * @param ability
    * @return true if the ability was removed successfully, false if the ability does not exist in the user's abilities array
    */

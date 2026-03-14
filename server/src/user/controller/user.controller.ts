@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 
-import { UsersService } from '@/user/service/user.service'
+import { UserService } from '@/user/service/user.service'
 import { RequestUserQueryDto } from '@/user/dto/user-query-dto'
 import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 
@@ -10,8 +10,8 @@ import { Abilities } from '@/_app/decorators/abilities.decorator'
 
 @Public()
 @Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly _usersService: UserService) {}
 
   /**
    * @description This method is responsible for creating a new user.
@@ -22,7 +22,7 @@ export class UsersController {
   @Roles('ADMIN')
   @Abilities('TENANT_MOD')
   create(@Body() userCreateDto: UserCreateDto) {
-    return this.usersService.create(userCreateDto)
+    return this._usersService.create(userCreateDto)
   }
 
   /**
@@ -32,7 +32,7 @@ export class UsersController {
    */
   @Get()
   findAll(@Query() userQueryDto: RequestUserQueryDto) {
-    return this.usersService.findAll(userQueryDto)
+    return this._usersService.findAll(userQueryDto)
   }
 
   /**
@@ -42,7 +42,7 @@ export class UsersController {
    */
   @Get('employee/:code')
   findByEmployeeCode(@Param('code') code: string) {
-    return this.usersService.findByEmployeeCode(code)
+    return this._usersService.findByEmployeeCode(code)
   }
 
   /**
@@ -52,7 +52,7 @@ export class UsersController {
    */
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id)
+    return this._usersService.findOne(+id)
   }
 
   /**
@@ -63,7 +63,7 @@ export class UsersController {
    */
   @Patch(':id')
   update(@Param('id') id: string, @Body() userUpdateDto: UserUpdateDto) {
-    return this.usersService.update(+id, userUpdateDto)
+    return this._usersService.update(+id, userUpdateDto)
   }
 
   /**
@@ -73,6 +73,6 @@ export class UsersController {
    */
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id)
+    return this._usersService.remove(+id)
   }
 }

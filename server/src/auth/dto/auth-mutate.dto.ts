@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength, IsEnum, IsNotEmpty } from 'class-validator'
+import { IsEmail, IsString, MinLength, IsEnum, IsNotEmpty, IsOptional } from 'class-validator'
 import { eUserRole } from '@/_app/constants/enum'
 
 // DTO for user login
@@ -48,4 +48,17 @@ export class AuthRegisterDto {
    */
   @IsEnum(eUserRole)
   role: eUserRole = eUserRole.GUEST
+
+  /**
+   * @description DTO: The Google ID is an optional string that represents the user's Google account ID.
+   */
+  @IsString({ message: 'Google ID must be a string' })
+  googleId: string
+
+  /**
+   * @description DTO: The avatar is an optional string that represents the URL of the user's avatar image.
+   */
+  @IsOptional()
+  @IsString({ message: 'Avatar must be a string' })
+  avatar: string
 }
