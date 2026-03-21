@@ -126,6 +126,9 @@ export class AuthController {
   @Get('google/callback')
   googleCallback(@Req() request: Request & { user: User }) {
     console.log(request)
-    return this._authService.loginWithGoogle(request.user)
+    return {
+      token: this._authService.loginWithGoogle(request.user),
+      user: request.user,
+    }
   }
 }
