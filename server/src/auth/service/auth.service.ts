@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { compare } from 'bcrypt'
 import type { StringValue } from 'ms'
+import { compare } from 'bcrypt'
 
 import { User } from '@/user/entity/user.entity'
 import { MailService } from '@/_app/mail/mail.service'
@@ -26,15 +26,25 @@ export class AuthService {
    * @returns An object containing the JWT token.
    * @throws UnauthorizedException if the user is not found or the password is incorrect.
    */
-  public login = async (authLoginDto: AuthLoginDto): Promise<{ token: string }> => {
+  public login = async (authLoginDto: AuthLoginDto): Promise<{ token: string; refreshToken: string }> => {
     const user = await this._usersService.findByEmail(authLoginDto.email)
-
-    if (!user) throw new UnauthorizedException('Invalid credentials: user not found')
+    if (!user) throw new UnauthorizedException('Invalid credentials')
 
     const isValid = await compare(authLoginDto.password, user.password)
-    if (!isValid) throw new UnauthorizedException('Invalid credentials: password does not match')
+    if (!isValid) throw new UnauthorizedException('Invalid credentials')
 
-    return this._generateJwtToken(user)
+    return this._issueTokenPair(user)
+  }
+
+  /**
+   * @description Logout and invalidate the refresh tokens
+
+   * @param uid
+   * @returns message
+   */
+  public logout = async (uid: number): Promise<{ message: string }> => {
+    await this._usersService.setRefreshToken(uid, null)
+    return { message: 'Logged out successfully.' }
   }
 
   /**
@@ -46,11 +56,10 @@ export class AuthService {
    */
   public register = async (authRegisterDto: AuthRegisterDto): Promise<{ token: string }> => {
     const user = await this._usersService.create(authRegisterDto)
-
     if (!user) throw new UnauthorizedException('Registration failed: unable to create user')
 
-    this.sendVerificationEmail(user.email)
-    return this.login({ email: authRegisterDto.email, password: authRegisterDto.password })
+    this.sendVerificationEmail(user.email) // fire and forget
+    return this._issueTokenPair(user)
   }
 
   /**
@@ -61,13 +70,13 @@ export class AuthService {
    */
   public forgotPassword = async (authForgotPasswordDto: AuthForgotPasswordDto): Promise<{ message: string }> => {
     const user = await this._usersService.findByEmail(authForgotPasswordDto.email)
-
-    if (!user) throw new UnauthorizedException('User with this email does not exist')
+    if (!user) return { message: 'If an account with this email exists, a password reset link has been sent.' }
 
     const resetToken: string = this._jwtService.sign(
-      { sub: user.uid, email: user.email, type: 'reset-password' },
+      { sub: user.uid, email: user.email, role: user.role, abilities: user.abilities, type: 'reset-password' },
       { expiresIn: `${this._configService.get<number>('MAIL_RESET_PASSWORD_VALIDITY') || 1}${this._configService.get<string>('MAIL_RESET_PASSWORD_VALIDITY_UNIT') || 'h'}` as StringValue },
     )
+
     await this._mailService.sendMail({
       user_name: user.getFullName(),
       user_email: user.email,
@@ -91,9 +100,26 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('Invalid token: user not found')
 
+    user.refreshToken = null
     user.password = resetAuthDto.password
+    user.passwordChangedAt = new Date()
     await this._usersService.update(user.uid, user)
+
     return { message: 'Password has been reset successfully.' }
+  }
+
+  /**
+   * @description Validates stored hash, then rotates the refresh token
+   *
+   * @param uid
+   * @param refreshToken
+   * @returns An object containing the JWT token.
+   * @throws UnauthorizedException if the user is not found or the password is incorrect.
+   */
+  public refreshTokens = async (uid: number, refreshToken: string): Promise<{ token: string; refreshToken: string }> => {
+    const user = await this._usersService.validateRefreshToken(uid, refreshToken)
+    if (!user) throw new UnauthorizedException('Invalid or expired refresh token')
+    return this._issueTokenPair(user)
   }
 
   /**
@@ -104,12 +130,13 @@ export class AuthService {
    */
   public sendVerificationEmail = async (email: string): Promise<{ message: string }> => {
     const user = await this._usersService.findByEmail(email)
-    if (!user) throw new UnauthorizedException('User with this email does not exist')
+    if (!user) throw new UnauthorizedException('If an account with this email exists, a verification email has been sent.')
 
     const token = this._jwtService.sign(
-      { sub: user.uid, email: user.email, type: 'verify-email' },
+      { sub: user.uid, email: user.email, role: user.role, abilities: user.abilities, type: 'verify-email' },
       { expiresIn: `${this._configService.get<number>('MAIL_VERIFY_EMAIL_VALIDITY') || 24}${this._configService.get<string>('MAIL_VERIFY_EMAIL_VALIDITY_UNIT') || 'h'}` as StringValue },
     )
+
     await this._mailService.sendMail({
       user_name: user.getFullName(),
       user_email: user.email,
@@ -128,11 +155,13 @@ export class AuthService {
    * @returns An object containing a message indicating that the email has been verified successfully.
    * @throws UnauthorizedException if the user is not found.
    */
-  public confirmVerficationEmail = async (userid: number): Promise<{ message: string }> => {
-    const user = await this._usersService.findOne(userid)
+  public confirmVerficationEmail = async (uid: number): Promise<{ message: string }> => {
+    const user = await this._usersService.findOne(uid)
     if (!user) throw new UnauthorizedException('User not found')
+
     user.verfiedAt = new Date()
     await this._usersService.update(user.uid, user)
+
     return { message: 'Email has been verified successfully.' }
   }
 
@@ -143,8 +172,8 @@ export class AuthService {
    * @param user - User entity resolved by validateGoogleUser()
    * @returns    - Signed JWT token
    */
-  public loginWithGoogle = (user: User): { token: string } => {
-    return this._generateJwtToken(user)
+  public loginWithGoogle = (user: User): Promise<{ token: string; refreshToken: string }> => {
+    return this._issueTokenPair(user)
   }
 
   /**
@@ -154,10 +183,27 @@ export class AuthService {
    * since that's what gets decoded and attached to req.user on each request.
    *
    * @param user - Fully resolved User entity from the database
-   * @returns    - { token } — the signed JWT string
+   * @returns    - { token, refreshToken } — the signed JWT string
    */
-  private _generateJwtToken = (user: User): { token: string } => {
-    const token = this._jwtService.sign({ sub: user.uid, email: user.email, role: user.role, abilities: user.abilities })
-    return { token }
+  private _issueTokenPair = async (user: User): Promise<{ token: string; refreshToken: string }> => {
+    const payload = { sub: user.uid, email: user.email, role: user.role, abilities: user.abilities, type: 'login' }
+
+    const accessToken = this._jwtService.sign(payload, {
+      secret: this._configService.getOrThrow<string>('AUTH_JWT_ACCESS_SECRET'),
+      expiresIn: this._configService.get<StringValue>('AUTH_JWT_ACCESS_EXPIRATION', '15m'),
+    })
+
+    const refreshToken = this._jwtService.sign(payload, {
+      secret: this._configService.getOrThrow<string>('AUTH_JWT_REFRESH_SECRET'),
+      expiresIn: this._configService.get<StringValue>('AUTH_JWT_REFRESH_EXPIRATION', '7d'),
+    })
+
+    // save the refresh token
+    await this._usersService.setRefreshToken(user.uid, refreshToken)
+
+    return {
+      token: accessToken,
+      refreshToken: refreshToken,
+    }
   }
 }

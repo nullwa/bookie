@@ -36,7 +36,7 @@ export class User {
   /**
    * @description The password should be hashed before being stored in the database
    */
-  @Column({ name: 'u-password' })
+  @Column({ name: 'u-password', nullable: true, select: false })
   @Check(`CHAR_LENGTH(u_password) >= 8`)
   password: string
 
@@ -70,6 +70,19 @@ export class User {
    */
   @Column({ name: 'u-avatar', nullable: true })
   avatar: string
+
+  /**
+   * @description Stores the hashed token. null when logged out.
+   */
+  @Column({ name: 'u-refresh-token', type: 'varchar', length: 512, nullable: true, select: false, default: null })
+  refreshToken: string | null
+
+  /**
+   * @description Updated whenever the password changes
+   * JWTs whose iat is before this timestamp are rejected by JwtStrategy.
+   */
+  @Column({ name: 'u-password-changed-at', type: 'datetime', nullable: true, default: null })
+  passwordChangedAt: Date
 
   /**
    * @description The createdAt column is automatically managed by TypeORM
@@ -138,6 +151,18 @@ export class User {
   @BeforeUpdate()
   public hashPassword = async (): Promise<void> => {
     if (this.password) this.password = await hash(this.password, SALT_ROUND)
+  }
+
+  /**
+   * @description Hashes the user's refresh token before inserting or updating the user entity in the database
+   * This method is decorated with @BeforeInsert and @BeforeUpdate to ensure that the refresh token is always hashed before being stored in the database
+   *
+   * @returns A promise that resolves when the refresh token has been hashed and updated in the user entity
+   */
+  @BeforeInsert()
+  @BeforeUpdate()
+  public hashRefreshToken = async (): Promise<void> => {
+    if (this.refreshToken) this.refreshToken = await hash(this.refreshToken, SALT_ROUND)
   }
 
   /**

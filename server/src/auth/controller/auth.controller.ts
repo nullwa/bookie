@@ -1,16 +1,20 @@
 import { Body, Controller, Get, Post, Patch, Req, Query, UnauthorizedException, UseGuards } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 
 import { User } from '@/user/entity/user.entity'
 import { AuthService } from '@/auth/service/auth.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
-import { AuthForgotPasswordDto, AuthResetPasswordDto } from '@/auth/dto/auth-token.dto'
+import { AuthForgotPasswordDto, AuthRefreshTokenDto, AuthResetPasswordDto } from '@/auth/dto/auth-token.dto'
 
 import { Public } from '@/_app/decorators/public.decorator'
 import { GoogleAuthGuard } from '@/_app/guards/google.guard'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly _authService: AuthService) {}
+  constructor(
+    private readonly _authService: AuthService,
+    private readonly _jwtService: JwtService,
+  ) {}
 
   /**
    * @description return the user associated with the JWT token
@@ -69,9 +73,7 @@ export class AuthController {
    */
   @Post('reset-password')
   resetPassword(@Req() request: Request & { user: { sub: number; email: string; type: string } }, @Body() authResetPasswordDto: AuthResetPasswordDto) {
-    if (request.user == null || request.user.type !== 'reset-password') {
-      throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
-    }
+    if (request.user == null || request.user.type !== 'reset-password') throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
     authResetPasswordDto.sub = request.user.sub
     return this._authService.resetPassword(authResetPasswordDto)
   }
@@ -97,10 +99,33 @@ export class AuthController {
    */
   @Patch('confirm-email')
   confirmEmail(@Req() request: Request & { user: { sub: number; email: string; type: string } }) {
-    if (request.user == null || request.user.type !== 'verify-email') {
-      throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
-    }
+    if (request.user == null || request.user.type !== 'verify-email') throw new UnauthorizedException('Token mismatch: invalid token type or missing token')
     return this._authService.confirmVerficationEmail(request.user.sub)
+  }
+
+  /**
+   * @description Refresh token rotation - old token invalidated on each use
+   *
+   * @param authRefreshTokenDto
+   * @returns new token refreshed
+   */
+  @Public()
+  @Post('refresh')
+  refresh(@Body() authRefreshTokenDto: AuthRefreshTokenDto) {
+    const decoded = this._jwtService.decode(authRefreshTokenDto.refreshtoken)
+    if (!decoded?.sub) throw new UnauthorizedException('Invalid refresh token')
+    return this._authService.refreshTokens(decoded.sub, authRefreshTokenDto.refreshtoken)
+  }
+
+  /**
+   * @description logout a user and return a message
+   *
+   * @param authLoginDto
+   * @returns Message indicating that a user no longer authenticated.
+   */
+  @Post('logout')
+  logout(@Req() request: Request & { user: { uid: number } }) {
+    return this._authService.logout(request.user.uid)
   }
 
   /**
@@ -124,11 +149,11 @@ export class AuthController {
   @Public()
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  googleCallback(@Req() request: Request & { user: User }) {
-    console.log(request)
+  async googleCallback(@Req() request: Request & { user: User }) {
+    const tokens = await this._authService.loginWithGoogle(request.user)
     return {
-      token: this._authService.loginWithGoogle(request.user),
-      user: request.user,
+      token: tokens.token,
+      refreshToken: tokens.refreshToken,
     }
   }
 }

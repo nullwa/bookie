@@ -1,14 +1,16 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { FindManyOptions, Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
+import { randomBytes } from 'crypto'
 
 import { User } from '@/user/entity/user.entity'
 import { Employee } from '@/user/entity/employee.entity'
 
+import { eUserRole } from '@/_app/constants/enum'
 import { RequestUserQueryDto } from '@/user/dto/user-query-dto'
 import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 import { parseParamValue, parseOrderBy, mapSortDirection, parseKeyValue } from '@/_app/constants/helper'
-import { eUserRole } from '@/_app/constants/enum'
+import { compare } from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -102,44 +104,18 @@ export class UserService {
   }
 
   /**
-   * @description Updates a user's information based on their unique identifier (uid) and the provided update data. The method first attempts to preload the user entity with the new data, and if the user is not found, it throws a NotFoundException. If the user is found, it saves the updated user entity to the database and returns it.
-   *
-   * @param uid
-   * @param updateUserDto
-   * @returns
-   */
-  public update = async (uid: number, userUpdateDto: UserUpdateDto): Promise<User> => {
-    const user = await this._userRepository.preload({ uid, ...userUpdateDto })
-    if (!user) throw new NotFoundException(`User with id ${uid} not found`)
-
-    return this._userRepository.save(user)
-  }
-
-  /**
-   * @description Soft deletes a user by their unique identifier (uid). The method attempts to soft delete the user, and if no records are affected (i.e., the user is not found), it throws a NotFoundException. If the deletion is successful, it returns true.
-   *
-   * @param uid
-   * @returns
-   */
-  public remove = async (uid: number): Promise<boolean> => {
-    const result = await this._userRepository.softDelete({ uid })
-    if (result.affected === 0) throw new NotFoundException(`This action removes a #${uid} user`)
-
-    return true
-  }
-
-  /**
    * @description Finds a user by their email address.
    *
    * @param email
    * @returns User
    * @throws NotFoundException if the user with the specified email is not found.
    */
-  public findByEmail = async (email: string): Promise<User> => {
-    const user = await this._userRepository.findOne({ where: { email } })
-    if (!user) throw new NotFoundException(`User with email ${email} not found`)
-
-    return user
+  public findByEmail = async (email: string): Promise<User | null> => {
+    return await this._userRepository.findOne({
+      where: { email },
+      // Explicitly select password since the column has select: false
+      select: ['uid', 'firstName', 'lastName', 'email', 'password', 'role', 'abilities', 'verfiedAt', 'passwordChangedAt'],
+    })
   }
 
   /**
@@ -168,14 +144,39 @@ export class UserService {
    * @remarks This method is used in the Google OAuth strategy to find or create a user based on their Google profile information.
    */
   public findByGoogleId = async (googleId: string): Promise<User | null> => {
-    const user = await this._userRepository.findOne({ where: { googleId } })
-    if (!user) throw new NotFoundException(`User with Google ID ${googleId} not found`)
+    return await this._userRepository.findOne({ where: { googleId } })
+  }
 
-    return user
+  /**
+   * @description Updates a user's information based on their unique identifier (uid) and the provided update data. The method first attempts to preload the user entity with the new data, and if the user is not found, it throws a NotFoundException. If the user is found, it saves the updated user entity to the database and returns it.
+   *
+   * @param uid
+   * @param updateUserDto
+   * @returns
+   */
+  public update = async (uid: number, userUpdateDto: UserUpdateDto): Promise<User> => {
+    const user = await this._userRepository.preload({ uid, ...userUpdateDto })
+    if (!user) throw new NotFoundException(`User with id ${uid} not found`)
+
+    return this._userRepository.save(user)
+  }
+
+  /**
+   * @description Soft deletes a user by their unique identifier (uid). The method attempts to soft delete the user, and if no records are affected (i.e., the user is not found), it throws a NotFoundException. If the deletion is successful, it returns true.
+   *
+   * @param uid
+   * @returns
+   */
+  public remove = async (uid: number): Promise<boolean> => {
+    const result = await this._userRepository.softDelete({ uid })
+    if (result.affected === 0) throw new NotFoundException(`This action removes a #${uid} user`)
+
+    return true
   }
 
   /**
    * @description Validate if a user existe while authenticating with google
+   *
    * @param profile
    * @returns user
    */
@@ -185,33 +186,51 @@ export class UserService {
 
     // Link existing account with Google
     const userByEmail = await this._userRepository.findOne({ where: { email: profile.email } })
-    if (userByEmail) return this._linkGoogleAccount(userByEmail.uid, profile.googleId, profile.avatar)
+    if (userByEmail) {
+      // Links a google account to an existing user by updating the user's record.
+      await this._userRepository.update({ uid: userByEmail.uid }, { googleId: profile.googleId, ...(profile.avatar ? { avatar: profile.avatar } : {}) })
+      return this._userRepository.findOneOrFail({ where: { uid: userByEmail.uid } })
+    }
 
     const [firstName, ...rest] = profile.name.split(' ')
 
     const user = this._userRepository.create({
       firstName: firstName,
-      lastName: rest.join(' '),
+      lastName: rest.join(' ') || '-',
       googleId: profile.googleId,
       email: profile.email,
-      password: Math.random().toString(36).slice(-8),
+      password: randomBytes(32).toString('hex'),
       avatar: profile.avatar ?? '',
       role: eUserRole.GUEST,
     })
+
     return this._userRepository.save(user)
   }
 
   /**
-   * @description Links a google account to an existing user by updating the user's record.
+   * @description Save the refresh token so we double check the validity of the token
    *
    * @param uid
-   * @param googleId
-   * @param avatar
-   * @returns Updated User
-   * @throws NotFoundException if the user with the specified uid is not found.
+   * @param token
    */
-  private _linkGoogleAccount = async (uid: number, googleId: string, avatar: string | null = null): Promise<User> => {
-    await this._userRepository.update({ uid: uid }, { googleId, ...(avatar ? { avatar } : {}) })
-    return this._userRepository.findOneOrFail({ where: { uid } })
+  public setRefreshToken = async (uid: number, token: string | null): Promise<void> => {
+    await this._userRepository.update({ uid }, { refreshToken: token })
+  }
+
+  /**
+   * @description Validate the refresh token of the user when loging in
+   *
+   * @param uid
+   * @param refreshToken
+   * @returns
+   */
+  public validateRefreshToken = async (uid: number, refreshToken: string): Promise<User | null> => {
+    const user = await this._userRepository.findOne({
+      where: { uid },
+      select: ['uid', 'email', 'role', 'abilities', 'refreshToken'],
+    })
+    if (!user || !user.refreshToken) return null
+    const isValid = await compare(refreshToken, user.refreshToken)
+    return isValid ? user : null
   }
 }

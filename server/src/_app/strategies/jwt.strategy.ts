@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+
+import { UserService } from '@/user/service/user.service'
 
 /**
  * JwtStrategy — runs on every protected route via the global JwtAuthGuard.
@@ -15,11 +17,14 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
  */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private readonly _configService: ConfigService) {
+  constructor(
+    private readonly _configService: ConfigService,
+    private readonly _userService: UserService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: _configService.getOrThrow<string>('AUTH_JWT_SECRET'),
+      secretOrKey: _configService.getOrThrow<string>('AUTH_JWT_ACCESS_SECRET'),
     })
   }
 
@@ -30,8 +35,16 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @param payload - Decoded JWT payload
    * @returns RequestUser — attached to req.user by Passport
    */
-  public validate = async (payload: { sub: string; email: string; role: string; abilities: string[]; iat?: number; exp?: number }): Promise<{ uid: string; email: string; role: string; abilities: string[] }> => {
-    if (!payload.sub || !payload.email) throw new Error('Invalid token payload')
-    return { uid: payload.sub, email: payload.email, role: payload.role, abilities: payload.abilities }
+  public validate = async (payload: { sub: number; email: string; role: string; abilities: string[]; type: string; iat?: number; exp?: number }): Promise<{ sub: number; email: string; role: string; abilities: string[]; type: string }> => {
+    if (!payload.sub || !payload.email) throw new UnauthorizedException('Invalid token payload')
+    // reject any token issued before the last passowrd reset
+    if (payload.iat) {
+      const user = await this._userService.findOne(payload.sub)
+      if (user?.passwordChangedAt) {
+        const issuedAt = payload.iat * 1000 // JWT iat is in seconds
+        if (issuedAt < user.passwordChangedAt.getTime()) throw new UnauthorizedException('Token has been invalidated. Please log in again.')
+      }
+    }
+    return { sub: payload.sub, email: payload.email, role: payload.role, abilities: payload.abilities, type: payload.type }
   }
 }

@@ -29,17 +29,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
    * @param profile       - Google profile resolved from the OAuth code
    * @param done          - Passport callback: done(error, user)
    */
-  async validate(accessToken: string, refreshToken: string, profile: Profile): Promise<User> {
+  async validate(_accessToken: string, _refreshToken: string, profile: Profile): Promise<User> {
     const email = profile.emails?.[0]?.value
     if (!email) throw new UnauthorizedException('Google account has no email')
 
-    const googleProfile = {
+    return this._userService.validateGoogleUser({
       googleId: profile.id,
       email: email,
       name: profile.displayName,
       avatar: profile.photos?.[0]?.value ?? null,
-    }
-
-    return this._userService.validateGoogleUser(googleProfile)
+    })
   }
 }
