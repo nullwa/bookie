@@ -47,7 +47,7 @@ export class Employee {
    * @description The status of the employee, which indicates whether the employee is currently active or not. It is a boolean value where true represents an active employee and false represents an inactive employee.
    */
   @Column({ name: 'ue-status' })
-  status: boolean
+  isActive: boolean
 
   //#region Relations
   /**
