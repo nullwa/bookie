@@ -11,12 +11,14 @@ import { RequestUserQueryDto } from '@/user/dto/user-query-dto'
 import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 import { parseParamValue, parseOrderBy, mapSortDirection, parseKeyValue } from '@/_app/constants/helper'
 import { compare } from 'bcrypt'
+import { Customer } from '../entity/customer.entity'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly _userRepository: Repository<User>,
     @InjectRepository(Employee) private readonly _employeeRepository: Repository<Employee>,
+    @InjectRepository(Customer) private readonly _customerRepository: Repository<Customer>,
   ) {}
 
   /**
@@ -97,9 +99,8 @@ export class UserService {
    * @returns
    */
   public findOne = async (uid: number): Promise<User> => {
-    const userData = await this._userRepository.findOne({ where: { uid } })
+    const userData = await this._userRepository.findOne({ where: { uid }, relations: ['employee', 'customer'] })
     if (!userData) throw new NotFoundException(`User with id ${uid} not found`)
-
     return userData
   }
 
@@ -159,6 +160,7 @@ export class UserService {
     if (!user) throw new NotFoundException(`User with id ${uid} not found`)
 
     return this._userRepository.save(user)
+    return this.findOne(uid)
   }
 
   /**

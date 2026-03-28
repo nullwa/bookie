@@ -32,6 +32,13 @@ export class UserCreateDto {
   password: string
 
   /**
+   * @description DTO: The phone number must not be empty and must be at least 8 characters long.
+   */
+  @IsNotEmpty({ message: 'Phone number must not be empty' })
+  @MinLength(8, { message: 'Phone number must be at least 8 characters long' })
+  phone: string
+
+  /**
    * @description DTO: The role must be one of the values defined in the eUserRole enum.
    */
   @IsEnum(eUserRole)
@@ -56,6 +63,13 @@ export class UserCreateDto {
   @IsOptional()
   @Type(() => EmployeeCreateDto)
   employee?: Partial<EmployeeCreateDto>
+
+  /**
+   * @description DTO: The customer information of the user, which is a one-to-one relationship with the Customer entity
+   */
+  @IsOptional()
+  @Type(() => CustomerCreateDto)
+  customer?: Partial<CustomerCreateDto>
 }
 
 // DTO: The UserUpdateDto class extends the UserCreateDto class, making all properties optional for update operations.
@@ -77,13 +91,6 @@ class EmployeeCreateDto {
   @IsNotEmpty({ message: 'Employee code must not be empty' })
   @IsString({ message: 'Employee code must be a string' })
   code: string
-
-  /**
-   * @description DTO: The phone number must not be empty and must be at least 8 characters long.
-   */
-  @IsNotEmpty({ message: 'Phone number must not be empty' })
-  @MinLength(8, { message: 'Phone number must be at least 8 characters long' })
-  phoneNumber: string
 
   /**
    * @description DTO: The position of the employee, which is a boolean indicating whether the employee holds a position or not. It is optional and defaults to false.
