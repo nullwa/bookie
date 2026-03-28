@@ -109,7 +109,7 @@ class EmployeeCreateDto {
    * @description DTO: The status of the employee, which is a boolean indicating whether the employee is active or not. It is optional and defaults to true.
    */
   @IsOptional()
-  status: boolean = true
+  isActive: boolean
 
   /**
    * @description DTO: The hire date must be a valid date. It is optional and defaults to the current date if not provided.
