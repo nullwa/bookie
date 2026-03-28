@@ -2,7 +2,7 @@ import { PartialType } from '@nestjs/mapped-types'
 import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray, IsString, IsDate } from 'class-validator'
 import { Type } from 'class-transformer'
 
-import { eUserRole } from '@/_app/constants/enum'
+import { eGenderRole, eUserRole } from '@/_app/constants/enum'
 import { eUserAbility } from '@/_app/constants/enum'
 
 // DTO: The UserCreateDto class defines the structure and validation rules for creating a new user.
@@ -96,4 +96,34 @@ class EmployeeCreateDto {
    */
   @IsDate({ message: 'Hire date must be a valid date' })
   hireDate: Date
+}
+
+class CustemerCreateDto {
+  /**
+   * @description DTO: The birthday of the customer must be a valid date. It is optional.
+   */
+  @IsOptional()
+  @IsDate({ message: 'Birthday must be a valid date' })
+  birthday: Date
+
+  /**
+   * @description
+   * The gender of the customer must be an array of valid eGenderRole values. It is optional.
+   */
+  @IsOptional()
+  @IsArray()
+  @IsEnum(eGenderRole, { each: true, message: 'this gender is not valid' })
+  gender: eGenderRole[]
+
+  /**
+   * @description DTO: The address of the customer must be a string. It is optional.
+   */
+  @IsOptional()
+  @IsString({ message: 'Address must be a string' })
+  address: string
+  /**
+   * @description DTO: The VIP status of the customer must be a boolean value. It is optional and defaults to false.
+   */
+  @IsOptional()
+  isVip: boolean = false
 }
