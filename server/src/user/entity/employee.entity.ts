@@ -29,7 +29,25 @@ export class Employee {
    */
   @Column({ name: 'ue-hired-at', type: 'datetime', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
   hiredAt: Date
-  //#endregion
+
+  /**
+   * @description The end date of the employee's employment, which indicates when the employee stopped working for the company. It is optional and defaults to the current date if not provided.
+   */
+  @Column({ name: 'ue-ended-at', type: 'datetime', nullable: true, default: () => 'CURRENT_TIMESTAMP' })
+  endedAt: Date
+
+  /**
+   * @description The job title of the employee, which indicates the role or position held by the employee within the company. It is optional and can be null if not provided.
+   * The job title can be used to provide additional information about the employee's responsibilities and level within the organization.
+   */
+  @Column({ name: 'ue-job-title', type: 'varchar', length: 255, nullable: true })
+  jobTitle: string
+
+  /**
+   * @description The status of the employee, which indicates whether the employee is currently active or not. It is a boolean value where true represents an active employee and false represents an inactive employee.
+   */
+  @Column({ name: 'ue-status' })
+  status: boolean
 
   //#region Relations
   /**

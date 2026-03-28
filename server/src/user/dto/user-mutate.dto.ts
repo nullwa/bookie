@@ -92,8 +92,27 @@ class EmployeeCreateDto {
   position: boolean = false
 
   /**
+   * @description DTO: The job title of the employee, which must not be empty and must be a string. It is optional and can be null if not provided.
+   */
+  @IsNotEmpty({ message: 'Job title must not be empty' })
+  @IsString({ message: 'Job title must be a string' })
+  jobTitle: string
+
+  /**
+   * @description DTO: The status of the employee, which is a boolean indicating whether the employee is active or not. It is optional and defaults to true.
+   */
+  @IsOptional()
+  status: boolean = true
+
+  /**
    * @description DTO: The hire date must be a valid date. It is optional and defaults to the current date if not provided.
    */
   @IsDate({ message: 'Hire date must be a valid date' })
   hireDate: Date
+
+  /**
+   * @description DTO: The end date must be a valid date. It is optional and defaults to the current date if not provided.
+   */
+  @IsDate({ message: 'End date must be a valid date' })
+  endDate: Date
 }
