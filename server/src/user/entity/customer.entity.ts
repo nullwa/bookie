@@ -24,7 +24,7 @@ export class Customer {
    * This column is nullable, as not all customers may choose to provide their gender, and it is of type enum to restrict the values to either 'MALE' or 'FEMALE'
    */
   @Column({ name: 'uc-gender', type: 'simple-array', nullable: true })
-  gender: eGenderRole[]
+  gender: eGenderRole
 
   /**
    * @description The address of the customer, which can be used for shipping and billing purposes

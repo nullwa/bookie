@@ -98,7 +98,7 @@ class EmployeeCreateDto {
   hireDate: Date
 }
 
-class CustemerCreateDto {
+class CustomerCreateDto {
   /**
    * @description DTO: The birthday of the customer must be a valid date. It is optional.
    */
@@ -111,9 +111,8 @@ class CustemerCreateDto {
    * The gender of the customer must be an array of valid eGenderRole values. It is optional.
    */
   @IsOptional()
-  @IsArray()
   @IsEnum(eGenderRole, { each: true, message: 'this gender is not valid' })
-  gender: eGenderRole[]
+  gender: eGenderRole
 
   /**
    * @description DTO: The address of the customer must be a string. It is optional.
