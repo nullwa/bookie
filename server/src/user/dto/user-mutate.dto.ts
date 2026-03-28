@@ -98,6 +98,7 @@ class EmployeeCreateDto {
   hireDate: Date
 }
 
+// DTO: The CustomerCreateDto class defines the structure and validation rules for creating a new customer, which is a nested object within the UserCreateDto.
 class CustomerCreateDto {
   /**
    * @description DTO: The birthday of the customer must be a valid date. It is optional.
@@ -120,6 +121,7 @@ class CustomerCreateDto {
   @IsOptional()
   @IsString({ message: 'Address must be a string' })
   address: string
+
   /**
    * @description DTO: The VIP status of the customer must be a boolean value. It is optional and defaults to false.
    */
