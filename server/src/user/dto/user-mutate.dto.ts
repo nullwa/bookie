@@ -2,7 +2,7 @@ import { PartialType } from '@nestjs/mapped-types'
 import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray, IsString, IsDate } from 'class-validator'
 import { Type } from 'class-transformer'
 
-import { eUserRole } from '@/_app/constants/enum'
+import { eGenderRole, eUserRole } from '@/_app/constants/enum'
 import { eUserAbility } from '@/_app/constants/enum'
 
 // DTO: The UserCreateDto class defines the structure and validation rules for creating a new user.
@@ -32,6 +32,13 @@ export class UserCreateDto {
   password: string
 
   /**
+   * @description DTO: The phone number must not be empty and must be at least 8 characters long.
+   */
+  @IsNotEmpty({ message: 'Phone number must not be empty' })
+  @MinLength(8, { message: 'Phone number must be at least 8 characters long' })
+  phone: string
+
+  /**
    * @description DTO: The role must be one of the values defined in the eUserRole enum.
    */
   @IsEnum(eUserRole)
@@ -56,6 +63,13 @@ export class UserCreateDto {
   @IsOptional()
   @Type(() => EmployeeCreateDto)
   employee?: Partial<EmployeeCreateDto>
+
+  /**
+   * @description DTO: The customer information of the user, which is a one-to-one relationship with the Customer entity
+   */
+  @IsOptional()
+  @Type(() => CustomerCreateDto)
+  customer?: Partial<CustomerCreateDto>
 }
 
 // DTO: The UserUpdateDto class extends the UserCreateDto class, making all properties optional for update operations.
@@ -79,13 +93,6 @@ class EmployeeCreateDto {
   code: string
 
   /**
-   * @description DTO: The phone number must not be empty and must be at least 8 characters long.
-   */
-  @IsNotEmpty({ message: 'Phone number must not be empty' })
-  @MinLength(8, { message: 'Phone number must be at least 8 characters long' })
-  phoneNumber: string
-
-  /**
    * @description DTO: The position of the employee, which is a boolean indicating whether the employee holds a position or not. It is optional and defaults to false.
    */
   @IsOptional()
@@ -96,4 +103,35 @@ class EmployeeCreateDto {
    */
   @IsDate({ message: 'Hire date must be a valid date' })
   hireDate: Date
+}
+
+// DTO: The CustomerCreateDto class defines the structure and validation rules for creating a new customer, which is a nested object within the UserCreateDto.
+class CustomerCreateDto {
+  /**
+   * @description DTO: The birthday of the customer must be a valid date. It is optional.
+   */
+  @IsOptional()
+  @IsDate({ message: 'Birthday must be a valid date' })
+  birthday: Date
+
+  /**
+   * @description
+   * The gender of the customer must be an array of valid eGenderRole values. It is optional.
+   */
+  @IsOptional()
+  @IsEnum(eGenderRole, { each: true, message: 'this gender is not valid' })
+  gender: eGenderRole
+
+  /**
+   * @description DTO: The address of the customer must be a string. It is optional.
+   */
+  @IsOptional()
+  @IsString({ message: 'Address must be a string' })
+  address: string
+
+  /**
+   * @description DTO: The VIP status of the customer must be a boolean value. It is optional and defaults to false.
+   */
+  @IsOptional()
+  isVip: boolean = false
 }
