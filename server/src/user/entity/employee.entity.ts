@@ -18,11 +18,11 @@ export class Employee {
   code: string
 
   /**
-   * @description The position of the employee.
+   * @description The managerial status of the employee.
    * true if the employee is in a managerial position, false otherwise.
    */
-  @Column({ name: 'ue-position' })
-  position: boolean
+  @Column({ name: 'ue-isManager' })
+  isManager: boolean
 
   /**
    * @description The hire date of the employee, which indicates when the employee started working for the company

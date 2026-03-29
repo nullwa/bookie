@@ -47,6 +47,7 @@ export class UserCreateDto {
   /**
    * @description DTO: The Google ID is an optional string that represents the user's Google account ID.
    */
+  @IsOptional()
   @IsString({ message: 'Google ID must be a string' })
   googleId: string
 
@@ -96,7 +97,7 @@ class EmployeeCreateDto {
    * @description DTO: The position of the employee, which is a boolean indicating whether the employee holds a position or not. It is optional and defaults to false.
    */
   @IsOptional()
-  position: boolean = false
+  isManager: boolean = false
 
   /**
    * @description DTO: The job title of the employee, which must not be empty and must be a string. It is optional and can be null if not provided.

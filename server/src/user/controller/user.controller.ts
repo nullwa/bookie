@@ -2,12 +2,11 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 
 import { UserService } from '@/user/service/user.service'
 import { RequestUserQueryDto } from '@/user/dto/user-query-dto'
-import { UserCreateDto, UserUpdateDto, EmployeeCreateDto } from '@/user/dto/user-mutate.dto'
+import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 
 import { Public } from '@/_app/decorators/public.decorator'
 import { Roles } from '@/_app/decorators/role.decorator'
 import { Abilities } from '@/_app/decorators/abilities.decorator'
-import { eUserRole } from '@/_app/constants/enum'
 
 @Public()
 @Controller('users')

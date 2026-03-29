@@ -1,17 +1,17 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { FindManyOptions, Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { randomBytes } from 'crypto'
 
 import { User } from '@/user/entity/user.entity'
 import { Employee } from '@/user/entity/employee.entity'
+import { Customer } from '@/user/entity/customer.entity'
 
 import { eUserRole } from '@/_app/constants/enum'
 import { RequestUserQueryDto } from '@/user/dto/user-query-dto'
 import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 import { parseParamValue, parseOrderBy, mapSortDirection, parseKeyValue } from '@/_app/constants/helper'
 import { compare } from 'bcrypt'
-import { Customer } from '../entity/customer.entity'
 
 @Injectable()
 export class UserService {
@@ -160,12 +160,10 @@ export class UserService {
     if (!user) throw new NotFoundException(`User with id ${uid} not found`)
 
     return this._userRepository.save(user)
-    return this.findOne(uid)
   }
 
   /**
    * @description Soft deletes a user by their unique identifier (uid). The method attempts to soft delete the user, and if no records are affected (i.e., the user is not found), it throws a NotFoundException. If the deletion is successful, it returns true.
-   *
    * @param uid
    * @returns
    */
