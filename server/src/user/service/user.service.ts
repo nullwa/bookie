@@ -99,9 +99,14 @@ export class UserService {
    * @returns
    */
   public findOne = async (uid: number): Promise<User> => {
-    const userData = await this._userRepository.findOne({ where: { uid }, relations: ['employee', 'customer'] })
+    const userData = await this._userRepository.findOne({ where: { uid } })
     if (!userData) throw new NotFoundException(`User with id ${uid} not found`)
-    return userData
+    const relation = userData.role === eUserRole.CLIENT ? 'employee' : 'customer'
+
+    return this._userRepository.findOneOrFail({
+      where: { uid },
+      relations: [relation],
+    })
   }
 
   /**
@@ -120,22 +125,31 @@ export class UserService {
   }
 
   /**
-   * @description Finds a user by their employee code.
+   * @description Finds a user by their associated employee code. The method first attempts to find an employee with the provided code, and if found, it returns the associated user. If no employee is found with the specified code, a NotFoundException is thrown.
    *
    * @param code
    * @returns User | null
    * @throws NotFoundException if the user with the specified employee code is not found.
    */
-  public findByEmployeeCode = async (code: string): Promise<User | null> => {
-    const employee = await this._userRepository.findOne({
-      where: { employee: { code } },
-      relations: ['employee'],
+  public findByEmployeeCode = async (code: string): Promise<Employee | null> => {
+    const employee = await this._employeeRepository.findOne({
+      where: { code },
+      relations: ['user'],
     })
     if (!employee) throw new NotFoundException(`User with employee code ${code} not found`)
 
     return employee
   }
 
+  public findIsVipCustomer = async (isVip: boolean): Promise<Customer[]> => {
+    const customers = await this._customerRepository.find({
+      where: { isVip },
+      relations: ['user'],
+    })
+    if (!customers.length) throw new NotFoundException(`No VIP customers found`)
+
+    return customers
+  }
   /**
    * @description Finds a user by their associated Google ID.
    *

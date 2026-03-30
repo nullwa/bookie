@@ -21,7 +21,7 @@ export class Employee {
    * @description The managerial status of the employee.
    * true if the employee is in a managerial position, false otherwise.
    */
-  @Column({ name: 'ue-isManager' })
+  @Column({ name: 'ue-is-manager' })
   isManager: boolean
 
   /**
@@ -46,7 +46,7 @@ export class Employee {
   /**
    * @description The status of the employee, which indicates whether the employee is currently active or not. It is a boolean value where true represents an active employee and false represents an inactive employee.
    */
-  @Column({ name: 'ue-status' })
+  @Column({ name: 'ue-is-active' })
   isActive: boolean
 
   //#region Relations
