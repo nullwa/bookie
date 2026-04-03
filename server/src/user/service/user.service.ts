@@ -93,20 +93,38 @@ export class UserService {
   }
 
   /**
-   * @description Retrieves a user by their unique identifier (uid). If the user is not found, a NotFoundException is thrown.
+   * @description Finds a user by their unique identifier (uid) and role type. The method retrieves the user along with their associated employee or customer information based on the specified role type. If the user is not found, a NotFoundException is thrown.
    *
    * @param uid
+   * @param type
    * @returns
    */
-  public findOne = async (uid: number): Promise<User> => {
-    const userData = await this._userRepository.findOne({ where: { uid } })
-    if (!userData) throw new NotFoundException(`User with id ${uid} not found`)
-    const relation = userData.role === eUserRole.CLIENT ? 'employee' : 'customer'
+  public findOne = async (uid: number, type: eUserRole): Promise<User> => {
+    let relation: keyof Pick<User, 'employee' | 'customer'> | null = null
 
-    return this._userRepository.findOneOrFail({
+    switch (type) {
+      case eUserRole.CLIENT:
+        relation = 'customer'
+        break
+      case eUserRole.BUSINESS_OWNER:
+      case eUserRole.BUSINESS_STUFF:
+        relation = 'employee'
+        break
+      case eUserRole.ADMIN:
+        relation = null
+        break
+      default:
+        throw new BadRequestException(`Unsupported role type: ${type}`)
+    }
+
+    const userData = await this._userRepository.findOne({
       where: { uid },
-      relations: [relation],
+      ...(relation && { relations: [relation] }),
     })
+
+    if (!userData) throw new NotFoundException(`User with id ${uid} not found`)
+
+    return userData
   }
 
   /**
@@ -141,6 +159,13 @@ export class UserService {
     return employee
   }
 
+  /**
+   * @description Finds VIP customers based on their VIP status. The method retrieves customers with the specified VIP status and their associated user information. If no customers are found with the specified VIP status, a NotFoundException is thrown.
+   *
+   * @param isVip
+   * @returns Customer[]
+   * @throws NotFoundException if no VIP customers are found.
+   */
   public findIsVipCustomer = async (isVip: boolean): Promise<Customer[]> => {
     const customers = await this._customerRepository.find({
       where: { isVip },
