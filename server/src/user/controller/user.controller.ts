@@ -7,6 +7,7 @@ import { UserCreateDto, UserUpdateDto } from '@/user/dto/user-mutate.dto'
 import { Public } from '@/_app/decorators/public.decorator'
 import { Roles } from '@/_app/decorators/role.decorator'
 import { Abilities } from '@/_app/decorators/abilities.decorator'
+import { eUserRole } from '@/_app/constants/enum'
 
 @Public()
 @Controller('users')
@@ -46,13 +47,15 @@ export class UserController {
   }
 
   /**
-   * @description This method retrieves a single user by their unique identifier (id).
+   * @description This method retrieves a single user by their unique identifier (id) and role type.
+   * The role type is used to determine which relation to load alongside the user.
    * @param id
-   * @returns The user object corresponding to the provided id, or null if no user is found.
+   * @param type
+   * @returns The user object corresponding to the provided id and role type, or null if no user is found.
    */
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this._usersService.findOne(+id)
+  @Get(':id/:type')
+  findOne(@Param('id') id: string, @Param('type') type: eUserRole) {
+    return this._usersService.findOne(+id, type)
   }
 
   /**
