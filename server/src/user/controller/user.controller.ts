@@ -54,7 +54,7 @@ export class UserController {
    * @returns The user object corresponding to the provided id and role type, or null if no user is found.
    */
   @Get(':id/:type')
-  findOne(@Param('id') id: string, @Param('type') type: eUserRole) {
+  findOne(@Param('id') id: string, @Query('type') type?: eUserRole) {
     return this._usersService.findOne(+id, type)
   }
 

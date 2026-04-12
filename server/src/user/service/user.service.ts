@@ -99,30 +99,23 @@ export class UserService {
    * @param type
    * @returns
    */
-  public findOne = async (uid: number, type: eUserRole): Promise<User> => {
-    let relation: keyof Pick<User, 'employee' | 'customer'> | null = null
-
-    switch (type) {
-      case eUserRole.CLIENT:
-        relation = 'customer'
-        break
-      case eUserRole.BUSINESS_OWNER:
-      case eUserRole.BUSINESS_STUFF:
-        relation = 'employee'
-        break
-      case eUserRole.ADMIN:
-        relation = null
-        break
-      default:
-        throw new BadRequestException(`Unsupported role type: ${type}`)
+  public findOne = async (uid: number, type?: eUserRole): Promise<User> => {
+    const roleRelationMap: Partial<Record<eUserRole, keyof Pick<User, 'employee' | 'customer'>>> = {
+      [eUserRole.CLIENT]: 'customer',
+      [eUserRole.BUSINESS_OWNER]: 'employee',
+      [eUserRole.BUSINESS_STUFF]: 'employee',
     }
+
+    const relation = type !== undefined ? roleRelationMap[type] : undefined
 
     const userData = await this._userRepository.findOne({
       where: { uid },
       ...(relation && { relations: [relation] }),
     })
 
-    if (!userData) throw new NotFoundException(`User with id ${uid} not found`)
+    if (!userData) {
+      throw new NotFoundException(`User with uid ${uid} not found`)
+    }
 
     return userData
   }

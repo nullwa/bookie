@@ -6,7 +6,7 @@
   "editor.renderWhitespace": "all",
   "git.autofetch": true,
   "editor.fontFamily": "Jetbrains Mono",
-  "editor.fontSize": 16,
+  "editor.fontSize": 12,
   "editor.tabSize": 2,
   "material-icon-theme.activeIconPack": "nest",
   "workbench.colorTheme": "One Dark Modern Pro",

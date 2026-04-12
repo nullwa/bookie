@@ -98,7 +98,7 @@ export class AuthService {
    * @throws UnauthorizedException if the token is invalid or the user is not found.
    */
   public resetPassword = async (resetAuthDto: AuthResetPasswordDto): Promise<{ message: string }> => {
-    const user = await this._usersService.findOne(resetAuthDto.sub, eUserRole.ADMIN) // only need to check admin users since only they can change their password
+    const user = await this._usersService.findOne(resetAuthDto.sub)
 
     if (!user) throw new UnauthorizedException('Invalid token: user not found')
 
@@ -158,7 +158,7 @@ export class AuthService {
    * @throws UnauthorizedException if the user is not found.
    */
   public confirmVerficationEmail = async (uid: number): Promise<{ message: string }> => {
-    const user = await this._usersService.findOne(uid, eUserRole.ADMIN) // only need to check admin users since only they can change their password
+    const user = await this._usersService.findOne(uid)
     if (!user) throw new UnauthorizedException('User not found')
 
     user.verfiedAt = new Date()

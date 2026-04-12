@@ -40,7 +40,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (!payload.sub || !payload.email) throw new UnauthorizedException('Invalid token payload')
     // reject any token issued before the last passowrd reset
     if (payload.iat) {
-      const user = await this._userService.findOne(payload.sub, eUserRole.ADMIN) // only need to check admin users since only they can change their password
+      const user = await this._userService.findOne(payload.sub)
       if (user?.passwordChangedAt) {
         const issuedAt = payload.iat * 1000 // JWT iat is in seconds
         if (issuedAt < user.passwordChangedAt.getTime()) throw new UnauthorizedException('Token has been invalidated. Please log in again.')
