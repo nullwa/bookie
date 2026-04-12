@@ -93,14 +93,37 @@ export class UserService {
   }
 
   /**
-   * @description Retrieves a user by their unique identifier (uid). If the user is not found, a NotFoundException is thrown.
+   * @description Finds a user by their unique identifier (uid) and role type. The method retrieves the user along with their associated employee or customer information based on the specified role type. If the user is not found, a NotFoundException is thrown.
    *
    * @param uid
+   * @param type
    * @returns
    */
-  public findOne = async (uid: number): Promise<User> => {
-    const userData = await this._userRepository.findOne({ where: { uid }, relations: ['employee', 'customer'] })
+  public findOne = async (uid: number, type: eUserRole): Promise<User> => {
+    let relation: keyof Pick<User, 'employee' | 'customer'> | null = null
+
+    switch (type) {
+      case eUserRole.CLIENT:
+        relation = 'customer'
+        break
+      case eUserRole.BUSINESS_OWNER:
+      case eUserRole.BUSINESS_STUFF:
+        relation = 'employee'
+        break
+      case eUserRole.ADMIN:
+        relation = null
+        break
+      default:
+        throw new BadRequestException(`Unsupported role type: ${type}`)
+    }
+
+    const userData = await this._userRepository.findOne({
+      where: { uid },
+      ...(relation && { relations: [relation] }),
+    })
+
     if (!userData) throw new NotFoundException(`User with id ${uid} not found`)
+
     return userData
   }
 
@@ -120,22 +143,38 @@ export class UserService {
   }
 
   /**
-   * @description Finds a user by their employee code.
+   * @description Finds a user by their associated employee code. The method first attempts to find an employee with the provided code, and if found, it returns the associated user. If no employee is found with the specified code, a NotFoundException is thrown.
    *
    * @param code
    * @returns User | null
    * @throws NotFoundException if the user with the specified employee code is not found.
    */
-  public findByEmployeeCode = async (code: string): Promise<User | null> => {
-    const employee = await this._userRepository.findOne({
-      where: { employee: { code } },
-      relations: ['employee'],
+  public findByEmployeeCode = async (code: string): Promise<Employee | null> => {
+    const employee = await this._employeeRepository.findOne({
+      where: { code },
+      relations: ['user'],
     })
     if (!employee) throw new NotFoundException(`User with employee code ${code} not found`)
 
     return employee
   }
 
+  /**
+   * @description Finds VIP customers based on their VIP status. The method retrieves customers with the specified VIP status and their associated user information. If no customers are found with the specified VIP status, a NotFoundException is thrown.
+   *
+   * @param isVip
+   * @returns Customer[]
+   * @throws NotFoundException if no VIP customers are found.
+   */
+  public findIsVipCustomer = async (isVip: boolean): Promise<Customer[]> => {
+    const customers = await this._customerRepository.find({
+      where: { isVip },
+      relations: ['user'],
+    })
+    if (!customers.length) throw new NotFoundException(`No VIP customers found`)
+
+    return customers
+  }
   /**
    * @description Finds a user by their associated Google ID.
    *

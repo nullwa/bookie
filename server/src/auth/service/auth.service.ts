@@ -9,6 +9,8 @@ import { MailService } from '@/_app/mail/mail.service'
 import { UserService } from '@/user/service/user.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
 import { AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
+import e from 'express'
+import { eUserRole } from '@/_app/constants/enum'
 
 @Injectable()
 export class AuthService {
@@ -96,7 +98,7 @@ export class AuthService {
    * @throws UnauthorizedException if the token is invalid or the user is not found.
    */
   public resetPassword = async (resetAuthDto: AuthResetPasswordDto): Promise<{ message: string }> => {
-    const user = await this._usersService.findOne(resetAuthDto.sub)
+    const user = await this._usersService.findOne(resetAuthDto.sub, eUserRole.ADMIN) // only need to check admin users since only they can change their password
 
     if (!user) throw new UnauthorizedException('Invalid token: user not found')
 
@@ -156,7 +158,7 @@ export class AuthService {
    * @throws UnauthorizedException if the user is not found.
    */
   public confirmVerficationEmail = async (uid: number): Promise<{ message: string }> => {
-    const user = await this._usersService.findOne(uid)
+    const user = await this._usersService.findOne(uid, eUserRole.ADMIN) // only need to check admin users since only they can change their password
     if (!user) throw new UnauthorizedException('User not found')
 
     user.verfiedAt = new Date()
