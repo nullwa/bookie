@@ -27,7 +27,7 @@ export class UserService {
    * @param createUserDto
    * @returns User
    */
-  public create = (userCreateDto: UserCreateDto): Promise<User | null> => {
+  public create = (userCreateDto: UserCreateDto): Promise<User> => {
     const user = this._userRepository.create(userCreateDto)
     return this._userRepository.save(user)
   }
@@ -36,10 +36,10 @@ export class UserService {
    * @description Retrieves a paginated list of users based on the provided page and limit parameters. The method calculates the appropriate offset and limit for the database query, retrieves the users, and returns them along with pagination metadata.
    *
    * @param userQueryDto
-   * @returns
+   * @returns metadata and data
    */
   public findAll = async (userQueryDto: RequestUserQueryDto): Promise<{ data: User[]; meta: { page: number; limit: number; total: number; totalPages: number } }> => {
-    const { page = 1, limit = 25, sort, search, fields, include } = userQueryDto
+    const { page = 1, limit = 25, sort, search, include } = userQueryDto
 
     // metadata
     const entityMetadata = this._userRepository.metadata
@@ -53,12 +53,6 @@ export class UserService {
     parseKeyValue<User>(search).forEach((s) => {
       if (!validColumns.includes(s.field as string)) errors.push(`Invalid search field: ${s.field}`)
       else where[s.field] = Like(`%${s.value}%`)
-    })
-
-    // select
-    const select = parseParamValue<User>(fields)
-    select.forEach((f) => {
-      if (!validColumns.includes(f as string)) errors.push(`Invalid field requested: ${f}`)
     })
 
     // relations
@@ -81,7 +75,6 @@ export class UserService {
     // data
     const options: FindManyOptions<User> = {
       where: Object.keys(where).length ? where : undefined,
-      select: select.length ? (select as (keyof User)[]) : undefined,
       relations: relations.length ? relations : undefined,
       order: order,
       skip: (page - 1) * limit,
@@ -113,10 +106,7 @@ export class UserService {
       ...(relation && { relations: [relation] }),
     })
 
-    if (!userData) {
-      throw new NotFoundException(`User with uid ${uid} not found`)
-    }
-
+    if (!userData) throw new NotFoundException(`User with uid ${uid} not found`)
     return userData
   }
 
@@ -190,7 +180,6 @@ export class UserService {
   public update = async (uid: number, userUpdateDto: UserUpdateDto): Promise<User> => {
     const user = await this._userRepository.preload({ uid, ...userUpdateDto })
     if (!user) throw new NotFoundException(`User with id ${uid} not found`)
-
     return this._userRepository.save(user)
   }
 

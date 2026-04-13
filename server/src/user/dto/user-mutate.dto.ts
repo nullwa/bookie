@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types'
-import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray, IsString, IsDate } from 'class-validator'
+import { IsEmail, IsEnum, IsNotEmpty, MinLength, IsOptional, IsArray, IsString, IsDate, ValidateNested } from 'class-validator'
 import { Type } from 'class-transformer'
 
 import { eGenderRole, eUserRole } from '@/_app/constants/enum'
@@ -62,15 +62,17 @@ export class UserCreateDto {
    * @description DTO: The abilities of the user, which is a many-to-many relationship with the Ability entity
    */
   @IsOptional()
-  @Type(() => EmployeeCreateDto)
-  employee?: Partial<EmployeeCreateDto>
+  @ValidateNested()
+  @Type(() => EmployeeDto)
+  employee?: Partial<EmployeeDto>
 
   /**
    * @description DTO: The customer information of the user, which is a one-to-one relationship with the Customer entity
    */
   @IsOptional()
-  @Type(() => CustomerCreateDto)
-  customer?: Partial<CustomerCreateDto>
+  @ValidateNested()
+  @Type(() => CustomerDto)
+  customer?: Partial<CustomerDto>
 }
 
 // DTO: The UserUpdateDto class extends the UserCreateDto class, making all properties optional for update operations.
@@ -84,8 +86,8 @@ export class UserUpdateDto extends PartialType(UserCreateDto) {
   abilities: eUserAbility[]
 }
 
-// DTO: The EmployeeCreateDto class defines the structure and validation rules for creating a new employee, which is a nested object within the UserCreateDto.
-class EmployeeCreateDto {
+// DTO: The EmployeeDto class defines the structure and validation rules for creating a new employee, which is a nested object within the UserCreateDto.
+class EmployeeDto {
   /**
    * @description DTO: The employee code must not be empty and must be a string.
    */
@@ -125,8 +127,8 @@ class EmployeeCreateDto {
   endDate: Date
 }
 
-// DTO: The CustomerCreateDto class defines the structure and validation rules for creating a new customer, which is a nested object within the UserCreateDto.
-class CustomerCreateDto {
+// DTO: The CustomerDto class defines the structure and validation rules for creating a new customer, which is a nested object within the UserCreateDto.
+class CustomerDto {
   /**
    * @description DTO: The birthday of the customer must be a valid date. It is optional.
    */

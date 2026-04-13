@@ -27,5 +27,11 @@ export class Contact {
    */
   @Column({ name: 'bc-website', nullable: true })
   website: string
+
+  /**
+   * @description The WhatsApp link of the contact, which is optional and can be null
+   */
+  @Column({ name: 'bc-whatsapp-link', nullable: true })
+  whatappLink: string
   //#endregion
 }

@@ -1,8 +1,8 @@
 import { IsNumber, IsOptional, IsString, Min } from 'class-validator'
 import { Type } from 'class-transformer'
 
-// DTO: The RequestUserQueryDto class defines the structure and validation rules for querying users with pagination, sorting, and filtering options.
-export class RequestUserQueryDto {
+// DTO: The RequestBusinessQueryDto class defines the structure and validation rules for querying businesses with pagination, sorting, and filtering options.
+export class RequestBusinessQueryDto {
   /**
    * @description DTO: The page number for pagination. Must be a positive integer. Default is 1.
    */
@@ -34,11 +34,4 @@ export class RequestUserQueryDto {
   @IsOptional()
   @IsString()
   search: string
-
-  /**
-   * @description DTO: A comma-separated list of related entities to include in the response. This is an optional string that specifies which related entities (e.g., posts, comments) should be included in the response. If not provided, no related entities will be included.
-   */
-  @IsOptional()
-  @IsString()
-  include: string
 }

@@ -10,7 +10,7 @@ import { Abilities } from '@/_app/decorators/abilities.decorator'
 import { eUserRole } from '@/_app/constants/enum'
 
 @Public()
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private readonly _usersService: UserService) {}
 
