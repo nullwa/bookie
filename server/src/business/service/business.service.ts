@@ -5,10 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Business } from '@/business/entity/business.entity'
 import { Contact } from '@/business/entity/contact.entity'
 import { Address } from '@/business/entity/address.entity'
+import { Employee } from '@/user/entity/employee.entity'
 
 import { BusinessCreateDto, BusinessUpdateDto } from '@/business/dto/business-mutate.dto'
 import { RequestBusinessQueryDto } from '@/business/dto/business-query.dto'
-import { mapSortDirection, parseKeyValue, parseOrderBy, parseParamValue } from '@/_app/constants/helper'
+import { mapSortDirection, parseKeyValue, parseOrderBy } from '@/_app/constants/helper'
 
 @Injectable()
 export class BusinessService {
@@ -16,6 +17,7 @@ export class BusinessService {
     @InjectRepository(Business) private readonly _businessRepository: Repository<Business>,
     @InjectRepository(Address) private readonly _addressRepository: Repository<Address>,
     @InjectRepository(Contact) private readonly _contactRepository: Repository<Contact>,
+    @InjectRepository(Employee) private readonly _employeeRepository: Repository<Employee>,
   ) {}
 
   /**

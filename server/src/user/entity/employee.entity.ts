@@ -1,6 +1,7 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 import { User } from '@/user/entity/user.entity'
+import { Business } from '@/business/entity/business.entity'
 
 @Entity({ name: 'dto-employee' })
 export class Employee {
@@ -55,5 +56,12 @@ export class Employee {
    */
   @OneToOne(() => User, (user) => user.employee)
   user: User
+
+  /**
+   * @description The business associated with the employee, which represents the company or organization that the employee works for
+   * This is a many-to-one relationship, as multiple employees can work for the same business, but each employee can only be associated with one business.
+   */
+  @ManyToOne(() => Business, (business) => business.employees)
+  business: Business
   //#endregion
 }

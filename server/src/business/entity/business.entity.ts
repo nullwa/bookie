@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 import { Address } from '@/business/entity/address.entity'
 import { Contact } from '@/business/entity/contact.entity'
+import { Employee } from '@/user/entity/employee.entity'
 
 @Entity({ name: 'dbo-business' })
 export class Business {
@@ -86,5 +87,12 @@ export class Business {
   @OneToOne(() => Contact, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'bc-contact-uid' })
   contact: Contact
+
+  /**
+   * @description The employees associated with the business, which represents the staff members working for the business.
+   */
+  @OneToMany(() => Employee, (employee) => employee.business)
+  @JoinColumn({ name: 'be-business-uid' })
+  employees: Employee[]
   //#endregion
 }
