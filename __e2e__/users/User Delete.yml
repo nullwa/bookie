@@ -1,0 +1,57 @@
+info:
+  name: User Delete
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{local}}/users/12"
+  auth:
+    type: bearer
+    token: "{{jwt}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 OK — User Deleted
+    request:
+      url: "{{local}}/users/12"
+      method: DELETE
+    response:
+      statusText: "200"
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: "true"
+  - name: 404 Not Found
+    request:
+      url: "{{local}}/users/12"
+      method: DELETE
+    response:
+      statusText: "404"
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 404,
+            "message": "This action removes a #42 user",
+            "error": "Not Found"
+          }
+
+docs: |-
+  Soft-deletes a user by their numeric UID. The record is not permanently removed from the database — it is marked as deleted via a `deletedAt` timestamp.
+
+  **Path parameter:**
+  - `:id` — numeric user UID
+
+  **Errors:**
+  - `404 Not Found` — user does not exist or was already deleted

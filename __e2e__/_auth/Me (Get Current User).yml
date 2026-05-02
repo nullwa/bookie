@@ -1,0 +1,77 @@
+info:
+  name: Me (Get Current User)
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{local}}/auth"
+  headers:
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{jwt}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 OK — Valid Token
+    request:
+      url: "{{local}}/auth"
+      method: GET
+      headers:
+        - name: Content-Type
+          value: application/json
+    response:
+      statusText: "200"
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "sub": "user-uid-123",
+            "email": "john.doe@example.com",
+            "role": "user",
+            "abilities": ["read:posts", "write:comments"],
+            "iat": 1700000000,
+            "exp": 1700003600
+          }
+  - name: 401 Unauthorized — Invalid or Expired Token
+    request:
+      url: "{{local}}/auth"
+      method: GET
+      headers:
+        - name: Content-Type
+          value: application/json
+    response:
+      statusText: "401"
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "statusCode": 401,
+            "message": "Unauthorized",
+            "error": "Unauthorized"
+          }
+
+docs: |-
+  Verifies the provided JWT token and returns the decoded payload (user info) if the token is valid.
+
+  **Access:** Protected — requires a valid JWT
+
+  **Note:** The token is passed both as an `Authorization: Bearer` header and in the request body as `{ token }`, depending on how your guards are configured.
+
+  **Returns:** The decoded JWT payload containing `sub` (uid), `email`, `role`, and `abilities`.
+
+  **Errors:**
+  - `401 Unauthorized` — Token is missing, malformed, or expired

@@ -1,0 +1,24 @@
+info:
+  name: Resend Confirmation Email
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{local}}/auth/verify-email?email=Tess.Maggio84@yahoo.com"
+  headers:
+    - name: Content-Type
+      value: application/json
+  params:
+    - name: email
+      value: Tess.Maggio84@yahoo.com
+      type: query
+  auth:
+    type: bearer
+    token: "{{jwt}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

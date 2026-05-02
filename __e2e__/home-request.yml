@@ -1,0 +1,76 @@
+info:
+  name: home-request
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{local}}"
+  auth:
+    type: bearer
+    token: "{{jwt}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  # Health Check Endpoint
+
+  ## Overview
+
+  This endpoint provides a health check for the Bookie application. It returns the current status of the application to verify that it is running and accessible.
+
+  ## Request Details
+
+  - **Method:** `GET`
+      
+  - **URL:** `{{local}}`
+      
+
+  ## Variables
+
+  This request uses the `{{local}}` variable which should be set in your environment. The variable is currently defined in the `bookie-env` environment and should contain the base URL of your Bookie application server.
+
+  **Example value:** `http://localhost:3000` or `https://api.bookie.com`
+
+  ## Response
+
+  ### Success Response
+
+  - **Status Code:** `201`
+      
+  - **Content-Type:** `application/json`
+      
+
+  **Response Body:**
+
+  ``` json
+  {
+    "status": "bookie",
+    "message": "Application is up"
+  }
+
+   ```
+
+  ### Response Fields
+
+  | Field | Type | Description |
+  | --- | --- | --- |
+  | `status` | string | The application identifier |
+  | `message` | string | Human-readable status message |
+
+  ## Usage Notes
+
+  - This endpoint can be used for monitoring and uptime checks
+      
+  - No authentication is required for this endpoint
+      
+  - The endpoint returns a 201 status code when the application is healthy
+      
+  - Use this endpoint to verify connectivity before making other API calls
+      
+
+  [link](https://claude.ai/chat/256f7d9f-1c38-4b16-b96e-413ddf213526)

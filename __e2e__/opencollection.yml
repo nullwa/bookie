@@ -1,0 +1,19 @@
+opencollection: 1.0.0
+
+info:
+  name: Bookie
+
+request:
+  variables:
+    - name: local
+      value: localhost
+    - name: port
+      value: "3000"
+    - name: jwt
+      value: ""
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
