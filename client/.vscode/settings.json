@@ -1,0 +1,37 @@
+{
+  /**
+   * Associate file types with specific languages to avoid issues with Tailwind CSS custom rules
+   */
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.scss": "tailwindcss"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "tailwindcss"
+  },
+  "tailwindCSS.classFunctions": ["cva", "cx"],
+  /*
+   * Custom regex patterns for Tailwind CSS class names
+   * This allows for better IntelliSense and autocompletion in Tailwind CSS files
+   * Adjust the patterns as necessary to fit your project's conventions
+   */
+  "tailwindCSS.experimental.classRegex": [
+    ["tw`([^`]*)", "tw", 1],
+    ["tw\\(([^)]*)\\)", "tw", 1],
+    ["tw\\[([^\\]]*)\\]", "tw", 1],
+    ["cn\\(([^)]*)\\)", "cn", 1]
+  ],
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.lint.invalidApply": "error",
+  // remove eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  "eslint.rules.customizations": [
+    {
+      "rule": "@typescript-eslint/no-empty-object-type",
+      "severity": "off"
+    }
+  ]
+}
