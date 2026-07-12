@@ -9,8 +9,8 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.removeUnusedImports": "explicit",
-    "source.removeUnused.ts": "explicit"
+    "source.removeUnusedImports": "never",
+    "source.removeUnused.ts": "never"
   },
   "tailwindCSS.includeLanguages": {
     "plaintext": "tailwindcss"
