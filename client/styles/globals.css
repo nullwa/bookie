@@ -1,1 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,75..100,100..700;1,75..100,100..700&display=swap');
+
 @import 'tailwindcss';
+@import './theme.css';
+@import './typography.css';
+
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+@custom-variant label (& [data-label]);
+@custom-variant focus-input-within (&:has(input:focus));
+
+.debugger {
+  border: 1px dashed red !important;
+}
+
+/* Firefox */
+html,
+body {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(156, 163, 175, 0.8) transparent;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.8);
+  border-radius: 9999px;
+}
