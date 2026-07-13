@@ -1,9 +1,8 @@
 import '@/styles/globals.css'
 
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
+import { geistSans } from '@/common/utils/fonts'
 
 export const metadata: Metadata = {
   title: 'Bookie',
