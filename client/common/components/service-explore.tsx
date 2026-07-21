@@ -2,6 +2,7 @@
 
 import { type CSSProperties, type FC, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
+import { ArrowUpRightIcon } from '@phosphor-icons/react'
 
 import { Badge } from '@/common/ui/badge'
 import { tm } from '@/common/utils/tw-merge'
@@ -65,7 +66,7 @@ const ServiceExplore: FC<Props> = ({ items }) => {
       <div ref={containerRef} className='relative w-full'>
         <div className='sticky top-0 flex h-1/2 w-full items-start justify-center flex-col overflow-hidden'>
           <div className='w-full max-w-6xl mx-auto px-4 py-20 flex items-center justify-center flex-col gap-4'>
-            <Badge label='Explore Services' variant='filled' />
+            <Badge label='Services' variant='ghost' />
             <div className='grid grid-rows-2 items-center place-content-center'>
               <h1 className={tm('text-4xl font-semibold ml-4 tracking-tight', bricolageGrotesque.className)}>Explore tools for your unique craft</h1>
               <p className='text-gray-500'>From solo practitioners to multi-location teams, Acuity adapts to how you work.</p>
@@ -80,6 +81,9 @@ const ServiceExplore: FC<Props> = ({ items }) => {
               </div>
             ))}
           </motion.div>
+          <div className='w-full max-w-6xl mx-auto px-4 py-20 flex items-center justify-center flex-col gap-4'>
+            <Badge label='Explore all services' variant='filled' size='lg' suffix={<ArrowUpRightIcon weight='bold' />} />
+          </div>
         </div>
       </div>
     </section>
