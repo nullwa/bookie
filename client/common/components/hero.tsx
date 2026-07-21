@@ -13,7 +13,7 @@ const Hero: FC<Props> = () => {
   return (
     <div className='bg-linear-to-b from-white from-55% to-brand-600 flex items-center justify-center flex-col px-4'>
       {/* jumbotron */}
-      <div className='w-full max-w-4xl flex flex-col items-center justify-center gap-8 pt-20 pb-16'>
+      <div className='w-full max-w-6xl flex flex-col items-center justify-center gap-8 py-20'>
         {/* hero title -> description */}
         <div className='w-full max-w-xl flex items-center justify-center flex-col gap-4'>
           <h1 className={`text-3xl sm:text-5xl ${bricolageGrotesque.className} font-bold text-center first-letter:capitalize`}>
@@ -28,7 +28,7 @@ const Hero: FC<Props> = () => {
         </div>
       </div>
       {/* image landing */}
-      <div className='w-full max-w-4xl px-6'>
+      <div className='w-full max-w-6xl px-6'>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src='/assets/hero-landing.png' alt='hero landing' className='w-full h-auto rounded' />
       </div>

@@ -12,7 +12,7 @@ type Props = {}
 const Nav: FC<Props> = () => {
   return (
     <nav className='w-full h-16 px-4 bg-white dark:bg-gray-950 flex items-center justify-center'>
-      <div className='w-full max-w-5xl flex items-center justify-between'>
+      <div className='w-full max-w-6xl flex items-center justify-between'>
         {/* logo */}
         <Image src={'/logo/logo.svg'} alt={'bookie logo'} width={72} height={'24'} loading={'eager'} />
         {/* navigation links */}
