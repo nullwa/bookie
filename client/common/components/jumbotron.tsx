@@ -1,8 +1,10 @@
 'use client'
 
 import { type FC } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { Badge } from '@/common/ui/badge'
+import { Button } from '@/common/ui/button'
 import { tm } from '@/common/utils/tw-merge'
 import { bricolageGrotesque } from '@/common/utils/fonts'
 
@@ -13,9 +15,14 @@ type Props = {
   fullWidth?: boolean
   withAction?: boolean
   centered?: boolean
+  navigation?: {
+    label: string
+    href: string
+  }
 }
 
-const Jumbotron: FC<Props> = ({ tag, title, description, fullWidth = false, withAction = false, centered = true }) => {
+const Jumbotron: FC<Props> = ({ tag, title, description, fullWidth = false, withAction = false, centered = true, navigation }) => {
+  const { push } = useRouter()
   return (
     <div className={tm('w-full max-w-6xl mx-auto px-4 py-20 flex items-center justify-center flex-col gap-4', centered && 'text-center')}>
       <Badge label={tag} variant='ghost' state='brand' />
@@ -23,6 +30,11 @@ const Jumbotron: FC<Props> = ({ tag, title, description, fullWidth = false, with
         <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>{title}</h1>
         <p className='text-gray-500'>{description}</p>
       </div>
+      {withAction && (
+        <div>
+          <Button label={navigation?.label} onClick={() => navigation?.href && push(navigation?.href)} />
+        </div>
+      )}
     </div>
   )
 }
