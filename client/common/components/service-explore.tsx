@@ -5,8 +5,7 @@ import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'moti
 import { ArrowUpRightIcon } from '@phosphor-icons/react'
 
 import { Badge } from '@/common/ui/badge'
-import { tm } from '@/common/utils/tw-merge'
-import { bricolageGrotesque } from '@/common/utils/fonts'
+import { Jumbotron } from '@/common/components/jumbotron'
 
 type Props = {
   items: {
@@ -65,13 +64,7 @@ const ServiceExplore: FC<Props> = ({ items }) => {
     <section>
       <div ref={containerRef} className='relative w-full'>
         <div className='sticky top-0 flex h-1/2 w-full items-start justify-center flex-col overflow-hidden'>
-          <div className='w-full max-w-6xl mx-auto px-4 py-20 flex items-center justify-center flex-col gap-4'>
-            <Badge label='Services' variant='ghost' />
-            <div className='grid grid-rows-2 items-center place-content-center'>
-              <h1 className={tm('text-4xl font-semibold ml-4 tracking-tight', bricolageGrotesque.className)}>Explore tools for your unique craft</h1>
-              <p className='text-gray-500'>From solo practitioners to multi-location teams, Acuity adapts to how you work.</p>
-            </div>
-          </div>
+          <Jumbotron tag='services' title='Explore tools for your unique craft' description='From solo practitioners to multi-location teams, Acuity adapts to how you work.' />
           <motion.div ref={galleryRef} style={{ x }} className='flex w-max gap-6 pr-6 will-change-transform pl-6 xl:pl-[calc((100%-72rem)/2)]'>
             {items.map((item) => (
               <div key={item.id} className='relative h-125 w-80 shrink-0 overflow-hidden rounded-xl bg-cover bg-center' style={{ backgroundImage: `url(${item.image})` } as CSSProperties}>

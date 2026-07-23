@@ -2,6 +2,7 @@ import { Nav } from '@/common/components/nav'
 import { Hero } from '@/common/components/hero'
 import { CallToAction } from '@/common/components/call-to-action'
 import { ServiceExplore } from '@/common/components/service-explore'
+import { Platform } from '@/common/components/platfrom'
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
           { id: 7, label: 'Med spas', image: 'https://images.ctfassets.net/2d5q1td6cyxq/7qLfXfviKccUqZ18cDHuX4/615536490429859b193d830cb64625ab/PD07338_USEN-ES_Card_7.png?fm=avif&q=85&fit=fill&w=710' },
         ]}
       />
+      <Platform />
       <CallToAction />
     </div>
   )
