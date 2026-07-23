@@ -6,7 +6,7 @@ import { Platform } from '@/common/components/platfrom'
 
 export default function Home() {
   return (
-    <div>
+    <main>
       <Nav />
       <Hero />
       <ServiceExplore
@@ -19,9 +19,9 @@ export default function Home() {
           { id: 6, label: 'Tattoo & piercing', image: 'https://images.ctfassets.net/2d5q1td6cyxq/4eXblIc2XINOe6E31lzI0F/36d4a702bdc43c9ab1378403ac36d984/PD07338_USEN-ES_Card_6.png?fm=avif&q=85&fit=fill&w=710' },
           { id: 7, label: 'Med spas', image: 'https://images.ctfassets.net/2d5q1td6cyxq/7qLfXfviKccUqZ18cDHuX4/615536490429859b193d830cb64625ab/PD07338_USEN-ES_Card_7.png?fm=avif&q=85&fit=fill&w=710' },
         ]}
-      />
+      />{' '}
       <Platform />
       <CallToAction />
-    </div>
+    </main>
   )
 }

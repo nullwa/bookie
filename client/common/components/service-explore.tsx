@@ -61,23 +61,18 @@ const ServiceExplore: FC<Props> = ({ items }) => {
   const x = useSpring(rawX, { stiffness: 200, damping: 28, mass: 0.2 })
 
   return (
-    <section>
-      <div ref={containerRef} className='relative w-full'>
-        <div className='sticky top-0 flex h-1/2 w-full items-start justify-center flex-col overflow-hidden'>
-          <Jumbotron tag='services' title='Explore tools for your unique craft' description='From solo practitioners to multi-location teams, Acuity adapts to how you work.' />
-          <motion.div ref={galleryRef} style={{ x }} className='flex w-max gap-6 pr-6 will-change-transform pl-6 xl:pl-[calc((100%-72rem)/2)]'>
-            {items.map((item) => (
-              <div key={item.id} className='relative h-125 w-80 shrink-0 overflow-hidden rounded-xl bg-cover bg-center' style={{ backgroundImage: `url(${item.image})` } as CSSProperties}>
-                <div className='absolute bottom-8 left-8'>
-                  <h2 className='text-2xl font-semibold text-white'>{item.label}</h2>
-                </div>
+    <section ref={containerRef} className='relative w-full'>
+      <div className='sticky top-0 flex w-full items-start justify-center flex-col overflow-hidden gap-20 px-4 pt-20'>
+        <Jumbotron tag='services' title='Explore tools for your unique craft' description='From solo practitioners to multi-location teams, Acuity adapts to how you work.' />
+        <motion.div ref={galleryRef} style={{ x }} className='flex w-max gap-4 pr-20 will-change-transform pl-6 xl:pl-[calc((100%-72rem)/2)]'>
+          {items.map((item) => (
+            <div key={item.id} className='relative h-125 w-80 shrink-0 overflow-hidden bg-cover bg-center' style={{ backgroundImage: `url(${item.image})` } as CSSProperties}>
+              <div className='absolute bottom-8 left-8'>
+                <h2 className='text-2xl font-semibold text-white'>{item.label}</h2>
               </div>
-            ))}
-          </motion.div>
-          <div className='w-full max-w-6xl mx-auto px-4 py-20 flex items-center justify-center flex-col gap-4'>
-            <Badge label='Explore all services' variant='filled' size='lg' suffix={<ArrowUpRightIcon weight='bold' />} />
-          </div>
-        </div>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   )

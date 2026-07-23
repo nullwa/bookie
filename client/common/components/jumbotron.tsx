@@ -16,15 +16,15 @@ type Props = {
   withAction?: boolean
   centered?: boolean
   navigation?: {
-    label: string
-    href: string
+    label?: string
+    href?: string
   }
 }
 
 const Jumbotron: FC<Props> = ({ tag, title, description, fullWidth = false, withAction = false, centered = true, navigation }) => {
   const { push } = useRouter()
   return (
-    <div className={tm('w-full max-w-6xl mx-auto px-4 py-20 flex items-center justify-center flex-col gap-4', centered && 'text-center')}>
+    <div className={tm('w-full max-w-6xl mx-auto flex items-center justify-center flex-col gap-4', centered && 'text-center')}>
       <Badge label={tag} variant='ghost' state='brand' />
       <div className={tm('flex items-center justify-center flex-col gap-1', fullWidth ? 'w-full' : 'max-w-xl')}>
         <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>{title}</h1>
