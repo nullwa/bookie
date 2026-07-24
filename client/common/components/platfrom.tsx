@@ -8,7 +8,7 @@ type Props = {}
 
 const Platform: FC<Props> = () => {
   return (
-    <section className='w-full max-w-6xl flex items-center justify-center flex-col mx-auto px-4 pt-20 gap-20'>
+    <section className='w-full max-w-6xl flex items-center justify-center flex-col mx-auto px-6 pt-20 gap-20'>
       <div className='w-full flex items-start justify-center flex-col overflow-hidden'>
         <Jumbotron
           tag='Platform'

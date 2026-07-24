@@ -2,9 +2,7 @@
 
 import { type CSSProperties, type FC, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
-import { ArrowUpRightIcon } from '@phosphor-icons/react'
 
-import { Badge } from '@/common/ui/badge'
 import { Jumbotron } from '@/common/components/jumbotron'
 
 type Props = {
@@ -62,7 +60,7 @@ const ServiceExplore: FC<Props> = ({ items }) => {
 
   return (
     <section ref={containerRef} className='relative w-full'>
-      <div className='sticky top-0 flex w-full items-start justify-center flex-col overflow-hidden gap-20 px-4 pt-20'>
+      <div className='sticky top-0 flex w-full items-start justify-center flex-col overflow-hidden gap-20 pt-20 px-6'>
         <Jumbotron tag='services' title='Explore tools for your unique craft' description='From solo practitioners to multi-location teams, Acuity adapts to how you work.' />
         <motion.div ref={galleryRef} style={{ x }} className='flex w-max gap-4 pr-20 will-change-transform pl-6 xl:pl-[calc((100%-72rem)/2)]'>
           {items.map((item) => (
