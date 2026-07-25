@@ -3,7 +3,9 @@
 import { type CSSProperties, type FC, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
 
-import { Jumbotron } from '@/common/components/jumbotron'
+import { tm } from '@/common/utils/tw-merge'
+import { bricolageGrotesque } from '@/common/utils/fonts'
+import { Badge } from '@/common/ui/badge'
 
 type Props = {
   items: {
@@ -60,8 +62,14 @@ const ServiceExplore: FC<Props> = ({ items }) => {
 
   return (
     <section ref={containerRef} className='relative w-full'>
-      <div className='sticky top-0 flex w-full items-start justify-center flex-col overflow-hidden gap-20 pt-20 px-6'>
-        <Jumbotron tag='services' title='Explore tools for your unique craft' description='From solo practitioners to multi-location teams, Acuity adapts to how you work.' />
+      <div className='sticky top-0 flex w-full h-1/2 items-start justify-center flex-col overflow-hidden gap-20 pt-20 px-6'>
+        <div className='w-full max-w-wrapper mx-auto flex items-center justify-center flex-col text-center gap-4'>
+          <Badge label={'services'} variant='ghost' state='brand' />
+          <div className='max-w-xl flex items-center justify-center flex-col gap-1'>
+            <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Explore tools for your unique craft</h1>
+            <p className='text-gray-500'>From solo practitioners to multi-location teams, Acuity adapts to how you work.</p>
+          </div>
+        </div>
         <motion.div ref={galleryRef} style={{ x }} className='flex w-max gap-4 pr-20 will-change-transform pl-6 xl:pl-[calc((100%-72rem)/2)]'>
           {items.map((item) => (
             <div key={item.id} className='relative h-125 w-80 shrink-0 overflow-hidden bg-cover bg-center' style={{ backgroundImage: `url(${item.image})` } as CSSProperties}>

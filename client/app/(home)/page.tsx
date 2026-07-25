@@ -1,3 +1,6 @@
+import { tm } from '@/common/utils/tw-merge'
+import { bricolageGrotesque } from '@/common/utils/fonts'
+
 import { Nav } from '@/common/components/nav'
 import { Hero } from '@/common/components/hero'
 import { CallToAction } from '@/common/components/call-to-action'
@@ -9,6 +12,20 @@ export default function Home() {
     <main>
       <Nav />
       <Hero />
+      <article className={'w-full max-w-wrapper grid grid-cols-5 mx-auto px-6 pt-20 gap-20'}>
+        <div className='col-span-2 flex flex-col gap-1'>
+          <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Say goodbye to scheduling chaos</h1>
+          <p className='text-gray-500'>Use {process.env.NEXT_PUBLIC_APPNAME} booking software to manage appointments, staff availability, and services all from one place — synced in real time.</p>
+        </div>
+        <div className='col-span-3'>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src='https://images.ctfassets.net/2d5q1td6cyxq/4kQdHqlNQWBcCorzJOxD8o/a7edc932b4029bd1a1bd4bf283b92135/PD07333_USEN_Module_1_Desktop.png?fm=avif&q=85&fit=fill&w=1460'
+            alt='Platform Image 1'
+            className='w-full h-full object-cover'
+          />
+        </div>
+      </article>
       <ServiceExplore
         items={[
           { id: 1, label: 'Beauty salons', image: 'https://images.ctfassets.net/2d5q1td6cyxq/2G1KL3MPpLXync6nFtHffM/7509ea438b7d65b4e5eb405bcdd13526/PD07338_USEN-ES_Card_1.png?fm=avif&q=85&fit=fill&w=710' },
@@ -19,8 +36,22 @@ export default function Home() {
           { id: 6, label: 'Tattoo & piercing', image: 'https://images.ctfassets.net/2d5q1td6cyxq/4eXblIc2XINOe6E31lzI0F/36d4a702bdc43c9ab1378403ac36d984/PD07338_USEN-ES_Card_6.png?fm=avif&q=85&fit=fill&w=710' },
           { id: 7, label: 'Med spas', image: 'https://images.ctfassets.net/2d5q1td6cyxq/7qLfXfviKccUqZ18cDHuX4/615536490429859b193d830cb64625ab/PD07338_USEN-ES_Card_7.png?fm=avif&q=85&fit=fill&w=710' },
         ]}
-      />{' '}
+      />
       <Platform />
+      <article className={'w-full max-w-wrapper grid grid-cols-5 mx-auto px-6 pt-20 gap-20'}>
+        <div className='col-span-3'>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src='https://images.ctfassets.net/2d5q1td6cyxq/H4UTv2I0pC4Ad8Gvwaniz/ce612794504546c5629e150db3adb1e3/PD07334_USEN_Module_2_Desktop.png?fm=avif&q=85&fit=fill&w=1460'
+            alt='Platform Image 1'
+            className='w-full h-full object-cover'
+          />
+        </div>
+        <div className='col-span-2 flex flex-col gap-1'>
+          <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Take payments online and in person</h1>
+          <p className='text-gray-500'>Accept payments in-studio, on the go, and online with all sales connected in one system — no extra apps needed.</p>
+        </div>
+      </article>
       <CallToAction />
     </main>
   )

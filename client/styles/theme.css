@@ -3,6 +3,7 @@
   /*                        Base                       */
   /* ------------------------------------------------- */
   /* #region containers */
+  --max-width-wrapper: 1440px;
   --max-width-container: 1280px;
   --max-width-container-sm: 640px;
   --max-width-container-md: 768px;
