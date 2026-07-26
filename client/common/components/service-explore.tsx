@@ -63,7 +63,7 @@ const ServiceExplore: FC<Props> = ({ items }) => {
   return (
     <section ref={containerRef} className='relative w-full'>
       <div className='sticky top-0 flex w-full h-1/2 items-start justify-center flex-col overflow-hidden gap-20 pt-20 px-6'>
-        <div className='w-full max-w-wrapper mx-auto flex items-center justify-center flex-col text-center gap-4'>
+        <div className='w-full max-w-container mx-auto flex items-center justify-center flex-col text-center gap-4'>
           <Badge label={'services'} variant='ghost' state='brand' />
           <div className='max-w-xl flex items-center justify-center flex-col gap-1'>
             <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Explore tools for your unique craft</h1>

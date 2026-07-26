@@ -10,9 +10,9 @@ type Props = {}
 
 const Platform: FC<Props> = () => {
   return (
-    <section className='w-full max-w-wrapper flex items-center justify-center flex-col mx-auto px-6 pt-20 gap-20'>
+    <section className='w-full max-w-container flex items-center justify-center flex-col mx-auto px-6 pt-20 gap-20'>
       <div className='w-full flex items-start justify-center flex-col overflow-hidden'>
-        <div className='w-full max-w-wrapper mx-auto flex items-center justify-center flex-col text-center gap-4'>
+        <div className='w-full max-w-container mx-auto flex items-center justify-center flex-col text-center gap-4'>
           <Badge label={'Platform'} variant='ghost' state='brand' />
           <div className='max-w-xl flex items-center justify-center flex-col gap-1'>
             <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Scheduling intelligence that works the way you do</h1>

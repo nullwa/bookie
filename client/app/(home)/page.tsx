@@ -6,13 +6,14 @@ import { Hero } from '@/common/components/hero'
 import { CallToAction } from '@/common/components/call-to-action'
 import { ServiceExplore } from '@/common/components/service-explore'
 import { Platform } from '@/common/components/platfrom'
+import { Panel } from '@/common/components/panel'
 
 export default function Home() {
   return (
     <main>
       <Nav />
       <Hero />
-
+      <Panel />
       <ServiceExplore
         items={[
           { id: 1, label: 'Beauty salons', image: 'https://images.ctfassets.net/2d5q1td6cyxq/2G1KL3MPpLXync6nFtHffM/7509ea438b7d65b4e5eb405bcdd13526/PD07338_USEN-ES_Card_1.png?fm=avif&q=85&fit=fill&w=710' },
@@ -25,7 +26,7 @@ export default function Home() {
         ]}
       />
       <Platform />
-      <article className={'w-full max-w-wrapper flex mx-auto px-6 pt-20 gap-20'}>
+      <article className={'w-full max-w-container flex mx-auto px-6 pt-20 gap-20'}>
         <div className='flex-1 flex flex-col gap-1'>
           <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Say goodbye to scheduling chaos</h1>
           <p className='text-gray-500'>Use {process.env.NEXT_PUBLIC_APPNAME} booking software to manage appointments, staff availability, and services all from one place — synced in real time.</p>
@@ -39,7 +40,7 @@ export default function Home() {
           />
         </div>
       </article>
-      <article className={'w-full max-w-wrapper flex mx-auto px-6 pt-20 gap-20'}>
+      <article className={'w-full max-w-container flex mx-auto px-6 pt-20 gap-20'}>
         <div className='flex-1'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -53,7 +54,7 @@ export default function Home() {
           <p className='text-gray-500'>Accept payments in-studio, on the go, and online with all sales connected in one system — no extra apps needed.</p>
         </div>
       </article>
-      <article className={'w-full max-w-wrapper flex mx-auto px-6 pt-20 gap-20'}>
+      <article className={'w-full max-w-container flex mx-auto px-6 pt-20 gap-20'}>
         <div className='flex-1 flex flex-col gap-1'>
           <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Send reminders and more, automatically</h1>
           <p className='text-gray-500'>Send customizable email and SMS messages for appointment confirmations, reminders, and easy rescheduling.</p>

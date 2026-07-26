@@ -7,7 +7,7 @@ import { bricolageGrotesque } from '@/common/utils/fonts'
 type Props = {}
 
 const CallToAction: FC<Props> = () => {
-  return <section className='w-full max-w-wrapper flex items-center justify-center flex-col mx-auto px-6 pt-20 gap-20'></section>
+  return <section className='w-full max-w-container flex items-center justify-center flex-col mx-auto px-6 pt-20 gap-20'></section>
 }
 
 CallToAction.displayName = 'CallToAction'
