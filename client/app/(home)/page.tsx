@@ -8,7 +8,7 @@ import { ServiceExplore } from '@/common/components/service-explore'
 import { Platform } from '@/common/components/platfrom'
 import { Panel } from '@/common/components/panel'
 
-export default function Home() {
+export default function Page() {
   return (
     <main>
       <Nav />
