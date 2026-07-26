@@ -5,8 +5,8 @@ import type { Metadata } from 'next'
 import { geistSans } from '@/common/utils/fonts'
 
 export const metadata: Metadata = {
-  title: 'Bookie',
-  description: 'Bookie is a simple and intuitive book tracking app.',
+  title: process.env.NEXT_PUBLIC_ENVIRONMENT === 'production' ? process.env.NEXT_PUBLIC_APPNAME : `${process.env.NEXT_PUBLIC_APPNAME} - (${process.env.NEXT_PUBLIC_ENVIRONMENT})`,
+  description: 'The intuitive book tracking app.',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
