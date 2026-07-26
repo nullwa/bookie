@@ -25,12 +25,12 @@ export default function Home() {
         ]}
       />
       <Platform />
-      <article className={'w-full max-w-wrapper grid grid-cols-5 mx-auto px-6 pt-20 gap-20'}>
-        <div className='col-span-2 flex flex-col gap-1'>
+      <article className={'w-full max-w-wrapper flex mx-auto px-6 pt-20 gap-20'}>
+        <div className='flex-1 flex flex-col gap-1'>
           <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Say goodbye to scheduling chaos</h1>
           <p className='text-gray-500'>Use {process.env.NEXT_PUBLIC_APPNAME} booking software to manage appointments, staff availability, and services all from one place — synced in real time.</p>
         </div>
-        <div className='col-span-3'>
+        <div className='flex-1'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src='https://images.ctfassets.net/2d5q1td6cyxq/4kQdHqlNQWBcCorzJOxD8o/a7edc932b4029bd1a1bd4bf283b92135/PD07333_USEN_Module_1_Desktop.png?fm=avif&q=85&fit=fill&w=1460'
@@ -39,12 +39,8 @@ export default function Home() {
           />
         </div>
       </article>
-      <article className={'w-full max-w-wrapper grid grid-cols-5 mx-auto px-6 pt-20 gap-20'}>
-        <div className='col-span-2 flex flex-col gap-1'>
-          <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Take payments online and in person</h1>
-          <p className='text-gray-500'>Accept payments in-studio, on the go, and online with all sales connected in one system — no extra apps needed.</p>
-        </div>
-        <div className='col-span-3'>
+      <article className={'w-full max-w-wrapper flex mx-auto px-6 pt-20 gap-20'}>
+        <div className='flex-1'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src='https://images.ctfassets.net/2d5q1td6cyxq/H4UTv2I0pC4Ad8Gvwaniz/ce612794504546c5629e150db3adb1e3/PD07334_USEN_Module_2_Desktop.png?fm=avif&q=85&fit=fill&w=1460'
@@ -52,13 +48,17 @@ export default function Home() {
             className='w-full h-full object-cover'
           />
         </div>
+        <div className='flex-1 flex flex-col gap-1'>
+          <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Take payments online and in person</h1>
+          <p className='text-gray-500'>Accept payments in-studio, on the go, and online with all sales connected in one system — no extra apps needed.</p>
+        </div>
       </article>
-      <article className={'w-full max-w-wrapper grid grid-cols-5 mx-auto px-6 pt-20 gap-20'}>
-        <div className='col-span-2 flex flex-col gap-1'>
+      <article className={'w-full max-w-wrapper flex mx-auto px-6 pt-20 gap-20'}>
+        <div className='flex-1 flex flex-col gap-1'>
           <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Send reminders and more, automatically</h1>
           <p className='text-gray-500'>Send customizable email and SMS messages for appointment confirmations, reminders, and easy rescheduling.</p>
         </div>
-        <div className='col-span-3'>
+        <div className='flex-1'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src='https://images.ctfassets.net/2d5q1td6cyxq/5FNc3R15l9rUnXiUNlXFAq/3190518f5f49115b06c6f2debd750883/PD07335_USEN_Module_3_Desktop.png?fm=avif&q=85&fit=fill&w=1460'
