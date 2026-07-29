@@ -8,7 +8,7 @@ import { Badge } from '@/common/ui/badge'
 
 type Props = {}
 
-const Platform: FC<Props> = () => {
+const LandingPlatform: FC<Props> = () => {
   return (
     <section className='w-full max-w-container flex items-center justify-center flex-col mx-auto px-6 pt-20 gap-20'>
       <div className='w-full flex items-start justify-center flex-col overflow-hidden'>
@@ -46,5 +46,5 @@ const Platform: FC<Props> = () => {
   )
 }
 
-Platform.displayName = 'Platform'
-export { Platform }
+LandingPlatform.displayName = 'landing-platform'
+export { LandingPlatform }

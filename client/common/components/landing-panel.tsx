@@ -10,7 +10,7 @@ import { Button } from '@/common/ui/button'
 
 type Props = {}
 
-const Panel: FC<Props> = () => {
+const LandingPanel: FC<Props> = () => {
   return (
     <section className='w-full max-w-container flex items-center justify-center flex-col mx-auto px-6 pt-20 gap-20'>
       <div className='w-full flex items-start justify-center flex-col overflow-hidden'>
@@ -61,5 +61,5 @@ const Panel: FC<Props> = () => {
   )
 }
 
-Panel.displayName = 'Panel'
-export { Panel }
+LandingPanel.displayName = 'landing-panel'
+export { LandingPanel }

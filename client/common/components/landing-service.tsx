@@ -15,7 +15,7 @@ type Props = {
   }[]
 }
 
-const ServiceExplore: FC<Props> = ({ items }) => {
+const LandingService: FC<Props> = ({ items }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
 
@@ -84,6 +84,5 @@ const ServiceExplore: FC<Props> = ({ items }) => {
   )
 }
 
-ServiceExplore.displayName = 'ServiceExplore'
-
-export { ServiceExplore }
+LandingService.displayName = 'landing-service'
+export { LandingService }
