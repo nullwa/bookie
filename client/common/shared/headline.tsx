@@ -9,7 +9,7 @@ import { bricolageGrotesque } from '@/common/utils/fonts'
 type Props = {}
 
 const Headline: FC<Props> = ({}) => (
-  <div className='w-full flex flex-col gap-8 p-6'>
+  <div className='w-full flex flex-col gap-8 px-6 pt-20'>
     <div className='w-full flex items-center justify-center flex-col gap-4'>
       <Badge label='Used by fast-growing B2B teams' variant={'filled'} />
       <h1 className={tm('w-full capitalize font-semibold text-4xl md:text-5xl lg:text-6xl text-center tracking-tight fade-in slide-in-from-bottom-10 animate-in delay-100 duration-500 ease-out', bricolageGrotesque.className)}>
