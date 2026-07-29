@@ -4,12 +4,49 @@ import { bricolageGrotesque } from '@/common/utils/fonts'
 import { Navigation } from '@/common/components/layout-nav'
 import { LandingHero } from '@/common/components/landing-hero'
 import { LandingService } from '@/common/components/landing-service'
+import { LandingSponsors } from '@/common/components/landing-sponsors'
 
 export default function Page() {
   return (
     <main>
       <Navigation />
       <LandingHero />
+      <LandingSponsors
+        items={[
+          {
+            src: 'https://storage.efferd.com/logo/nvidia-wordmark.svg',
+            alt: 'Nvidia Logo',
+          },
+          {
+            src: 'https://storage.efferd.com/logo/supabase-wordmark.svg',
+            alt: 'Supabase Logo',
+          },
+          {
+            src: 'https://storage.efferd.com/logo/openai-wordmark.svg',
+            alt: 'OpenAI Logo',
+          },
+          {
+            src: 'https://storage.efferd.com/logo/turso-wordmark.svg',
+            alt: 'Turso Logo',
+          },
+          {
+            src: 'https://storage.efferd.com/logo/vercel-wordmark.svg',
+            alt: 'Vercel Logo',
+          },
+          {
+            src: 'https://storage.efferd.com/logo/github-wordmark.svg',
+            alt: 'GitHub Logo',
+          },
+          {
+            src: 'https://storage.efferd.com/logo/claude-wordmark.svg',
+            alt: 'Claude AI Logo',
+          },
+          {
+            src: 'https://storage.efferd.com/logo/clerk-wordmark.svg',
+            alt: 'Clerk Logo',
+          },
+        ]}
+      />
       <LandingService
         items={[
           { id: 1, label: 'Beauty salons', image: 'https://images.ctfassets.net/2d5q1td6cyxq/2G1KL3MPpLXync6nFtHffM/7509ea438b7d65b4e5eb405bcdd13526/PD07338_USEN-ES_Card_1.png?fm=avif&q=85&fit=fill&w=710' },

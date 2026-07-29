@@ -8,11 +8,7 @@ import { bricolageGrotesque } from '@/common/utils/fonts'
 import { Badge } from '@/common/ui/badge'
 
 type Props = {
-  items: {
-    id: number
-    label: string
-    image: string
-  }[]
+  items: { id: number; label: string; image: string }[]
 }
 
 const LandingService: FC<Props> = ({ items }) => {
@@ -66,7 +62,7 @@ const LandingService: FC<Props> = ({ items }) => {
         <div className='w-full max-w-container mx-auto flex items-center justify-center flex-col text-center gap-4'>
           <Badge label={'services'} variant='ghost' state='brand' />
           <div className='max-w-xl flex items-center justify-center flex-col gap-1'>
-            <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Explore tools for your unique craft</h1>
+            <h2 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Explore tools for your unique craft</h2>
             <p className='text-gray-500'>From solo practitioners to multi-location teams, Acuity adapts to how you work.</p>
           </div>
         </div>
