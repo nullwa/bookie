@@ -9,7 +9,7 @@ type Props = {}
 
 const LandingHero: FC<Props> = ({}) => {
   return (
-    <article className='relative flex flex-col items-center px-4 gap-8 bg-linear-to-b from-white from-55% to-brand-600'>
+    <section className='relative flex flex-col items-center px-4 gap-8 bg-linear-to-b from-white from-55% to-brand-600'>
       <div className='w-full flex-1 max-w-container px-6 flex items-center justify-center flex-col gap-10'>
         <div className='w-full relative z-10 flex-1 flex flex-col items-center gap-20'>
           <Headline />
@@ -39,7 +39,7 @@ const LandingHero: FC<Props> = ({}) => {
         />
       </div>
       {/* end: dot-field animation */}
-    </article>
+    </section>
   )
 }
 
