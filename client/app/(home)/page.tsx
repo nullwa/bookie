@@ -5,6 +5,8 @@ import { Navigation } from '@/common/components/layout-nav'
 import { LandingHero } from '@/common/components/landing-hero'
 import { LandingService } from '@/common/components/landing-service'
 import { LandingSponsors } from '@/common/components/landing-sponsors'
+import { LandingHowItWorks } from '@/common/components/landing-howitworks'
+import { LandingPlatform } from '@/common/components/landing-platform'
 
 export default function Page() {
   return (
@@ -47,6 +49,7 @@ export default function Page() {
           },
         ]}
       />
+      <LandingHowItWorks />
       <LandingService
         items={[
           { id: 1, label: 'Beauty salons', image: 'https://images.ctfassets.net/2d5q1td6cyxq/2G1KL3MPpLXync6nFtHffM/7509ea438b7d65b4e5eb405bcdd13526/PD07338_USEN-ES_Card_1.png?fm=avif&q=85&fit=fill&w=710' },
@@ -58,7 +61,7 @@ export default function Page() {
           { id: 7, label: 'Med spas', image: 'https://images.ctfassets.net/2d5q1td6cyxq/7qLfXfviKccUqZ18cDHuX4/615536490429859b193d830cb64625ab/PD07338_USEN-ES_Card_7.png?fm=avif&q=85&fit=fill&w=710' },
         ]}
       />
-
+      <LandingPlatform />
       <article className={'w-full max-w-container flex mx-auto px-6 pt-20 gap-20'}>
         <div className='flex-1 flex flex-col gap-1'>
           <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Say goodbye to scheduling chaos</h1>

@@ -15,8 +15,8 @@ const LandingPlatform: FC<Props> = () => {
         <div className='w-full max-w-container mx-auto flex items-center justify-center flex-col text-center gap-4'>
           <Badge label={'Platform'} variant='ghost' state='brand' />
           <div className='max-w-xl flex items-center justify-center flex-col gap-1'>
-            <h1 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Scheduling intelligence that works the way you do</h1>
-            <p className='text-gray-500'>${process.env.NEXT_PUBLIC_APPNAME} doesn’t just show you when people are free. It understands how you work: meeting density, focus rhythms, workload balance. The you use it, the smarter it gets.</p>
+            <h2 className={tm('text-4xl font-semibold tracking-tight', bricolageGrotesque.className)}>Scheduling intelligence that works the way you do</h2>
+            <p className='text-gray-500'>{process.env.NEXT_PUBLIC_APPNAME} doesn’t just show you when people are free. It understands how you work: meeting density, focus rhythms, workload balance. The you use it, the smarter it gets.</p>
           </div>
         </div>
       </div>
