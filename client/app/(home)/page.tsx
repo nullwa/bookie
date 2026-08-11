@@ -7,6 +7,7 @@ import { LandingService } from '@/common/components/landing-service'
 import { LandingSponsors } from '@/common/components/landing-sponsors'
 import { LandingHowItWorks } from '@/common/components/landing-howitworks'
 import { LandingPlatform } from '@/common/components/landing-platform'
+import { LandingPanel } from '@/common/components/landing-panel'
 
 export default function Page() {
   return (
@@ -104,6 +105,7 @@ export default function Page() {
           />
         </div>
       </article>
+      <LandingPanel />
     </main>
   )
 }

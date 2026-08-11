@@ -9,8 +9,6 @@ import { MailService } from '@/_app/mail/mail.service'
 import { UserService } from '@/user/service/user.service'
 import { AuthLoginDto, AuthRegisterDto } from '@/auth/dto/auth-mutate.dto'
 import { AuthResetPasswordDto, AuthForgotPasswordDto } from '@/auth/dto/auth-token.dto'
-import e from 'express'
-import { eUserRole } from '@/_app/constants/enum'
 
 @Injectable()
 export class AuthService {
