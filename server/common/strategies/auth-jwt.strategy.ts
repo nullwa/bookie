@@ -3,24 +3,50 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
-import { UserService } from '@/modules/user/services/user.service'
+// #region imports
+import { IdentityService } from '@/modules/identity/identity.service'
+// #endregion
 
+/**
+ * @class AuthJwtStrategy
+ * @extends {PassportStrategy}
+ * @decorator @Injectable()
+ *
+ * JwtStrategy — runs on every protected route via the global JwtAuthGuard.
+ *
+ * Passport extracts the Bearer token from the Authorization header,
+ * verifies its signature against AUTH_JWT_SECRET, checks expiration,
+ * then calls validate() with the decoded payload.
+
+ * The returned object is attached to req.user and made available
+ * to all downstream guards (@Roles, @Abilities) and route handlers.
+ */
 @Injectable()
-export class AuthJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+class AuthJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+  /**
+   * Initializes the JWT strategy with Passport configuration
+   *
+   * @param {ConfigService} _configService - NestJS configuration service for retrieving environment variables
+   * @throws {Error} If JWT_SECRET environment variable is not configured
+   */
   constructor(
-    private readonly configService: ConfigService,
-    private readonly userService: UserService
+    private readonly _configService: ConfigService,
+    private readonly _identityService: IdentityService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
+      secretOrKey: _configService.getOrThrow<string>('JWT_SECRET'),
     })
   }
 
-  async validate(payload: { sub: number; email?: string | null; phone?: string | null; purpose?: 'link' | 'auth' }): Promise<any> {
-    const user = await this.userService.find(payload.sub)
-    if (!user) throw new UnauthorizedException()
-    return user
+  public validate = async (payload: Typed.Auth.Profile): Promise<Typed.Auth.Profile> => {
+    if (!payload.sub || !payload.identifier) throw new UnauthorizedException('invalid token payload')
+
+    const identity = await this._identityService.findUserIdentityByProviderAndIdentifier(payload.provider, payload.identifier)
+    if (!identity) throw new UnauthorizedException('invalid token payload')
+
+    return { ...payload }
   }
 }
+export { AuthJwtStrategy }

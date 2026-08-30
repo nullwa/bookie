@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-/* #region imports */
-// models
+
+// #region imports
 import { UserModel } from '@/modules/user/models/user.model'
-import { IdentityModel } from '@/modules/user/models/identity.model'
-// services
-import { UserService } from '@/modules/user/services/user.service'
-import { IdentityService } from '@/modules/user/services/identity.service'
-/* endregion */
+import { UserService } from '@/modules/user/user.service'
+import { UserController } from '@/modules/user/user.controller'
+// #endregion
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserModel, IdentityModel])],
-  controllers: [],
-  providers: [IdentityService, UserService],
-  exports: [IdentityService],
+  imports: [TypeOrmModule.forFeature([UserModel])],
+  providers: [UserService],
+  controllers: [UserController],
+  exports: [UserService],
 })
-export class UserModule {}
+class UserModule {}
+export { UserModule }

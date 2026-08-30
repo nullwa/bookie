@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { typeOrmConfig } from '@/config/typeorm.config'
+// #region imports
+import { typeOrmConfig } from '@/core/config/typeorm.config'
+// #endregion
 
 @Module({
   imports: [
@@ -14,4 +16,5 @@ import { typeOrmConfig } from '@/config/typeorm.config'
   ],
   exports: [TypeOrmModule],
 })
-export class DatabaseModule {}
+class DatabaseModule {}
+export { DatabaseModule }

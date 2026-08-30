@@ -1,7 +1,10 @@
-export const Provider = {
-  GOOGLE: 'google',
-  LOCAL: 'local',
-  PHONE: 'phone',
+export enum Provider {
+  GOOGLE = 'google',
+  PHONE = 'phone',
+  EMAIL = 'email',
 }
 
-export type Provider = (typeof Provider)[keyof typeof Provider]
+export enum Purpose {
+  LINK = 'link',
+  ACCESS = 'access',
+}

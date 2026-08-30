@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config'
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
-export const typeOrmConfig = (_configService: ConfigService): TypeOrmModuleOptions => ({
+const typeOrmConfig = (_configService: ConfigService): TypeOrmModuleOptions => ({
   type: _configService.getOrThrow<'mysql' | 'postgres'>('DATABASE_TYPE', 'mysql'),
   host: _configService.getOrThrow<string>('DATABASE_HOST'),
   port: _configService.getOrThrow<number>('DATABASE_PORT'),
@@ -11,3 +11,5 @@ export const typeOrmConfig = (_configService: ConfigService): TypeOrmModuleOptio
   autoLoadEntities: true,
   synchronize: _configService.getOrThrow<boolean>('DATABASE_SYNC', false),
 })
+
+export { typeOrmConfig }

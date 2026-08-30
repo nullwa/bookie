@@ -1,20 +1,23 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { IdentityModel } from '@/modules/user/models/identity.model'
 
-@Entity('table-user')
-export class UserModel {
-  @PrimaryGeneratedColumn({ name: 'u-uid' })
+// #region imports
+import { IdentityModel } from '@/modules/identity/models/identity.model'
+import { Enum } from '@/common/enums'
+import { uniqueArrayTransformer } from '@/common/helpers'
+// #endregion
+
+@Entity('table-usr-user')
+class UserModel {
+  @PrimaryGeneratedColumn({ name: 'tuu-uid' })
   uid: number
 
-  @Column({ name: 'u-last-name' })
-  firstName: string
+  @Column({ name: 'tuu-role', type: 'enum', enum: Enum.User.Role, default: Enum.User.Role.GUEST })
+  role: Typed.User.Role
 
-  @Column({ name: 'u-first-name' })
-  lastName: string
+  @Column({ name: 'tuu-abilities', type: 'simple-array', nullable: true, transformer: uniqueArrayTransformer() })
+  abilities: Typed.User.Ability[]
 
-  @Column({ name: 'u-avatar', nullable: true })
-  avatar: string
-
-  @OneToMany(() => IdentityModel, (identity) => identity.user, { onDelete: 'CASCADE' })
+  @OneToMany(() => IdentityModel, (identity) => identity.user)
   identities: IdentityModel[]
 }
+export { UserModel }
