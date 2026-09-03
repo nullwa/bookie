@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, ExecutionContext } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+
+import type { Request } from 'express'
 
 /**
  * @class AuthGoogleGuard
@@ -12,5 +14,11 @@ import { AuthGuard } from '@nestjs/passport'
  * JwtAuthGuard does not reject them (they have no JWT yet).
  */
 @Injectable()
-class AuthGoogleGuard extends AuthGuard('google') {}
+class AuthGoogleGuard extends AuthGuard('google') {
+  getAuthenticateOptions(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest<Request>()
+    const state = typeof request.query?.state === 'string' ? request.query.state : undefined
+    return state ? { state } : undefined
+  }
+}
 export { AuthGoogleGuard }

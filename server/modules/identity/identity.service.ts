@@ -11,16 +11,24 @@ class IdentityService {
   /**
    * Ctor
    *
-   * @param {IdentityModel} _identityModel - Identity model the enable account linking when authenticating
+   * @param {IdentityModel} _identityRepository - Identity model the enable account linking when authenticating
    */
-  constructor(@InjectRepository(IdentityModel) private readonly _identityModel: Repository<IdentityModel>) {}
+  constructor(@InjectRepository(IdentityModel) private readonly _identityRepository: Repository<IdentityModel>) {}
 
   public verifyIdentifier = (identifier: string): Promise<boolean> => {
-    return this._identityModel.exists({ where: { identifier } })
+    return this._identityRepository.exists({ where: { identifier }, relations: { user: true } })
   }
 
   public findUserIdentityByProviderAndIdentifier = (provider: Typed.Auth.Provider, identifier: string): Promise<IdentityModel | null> => {
-    return this._identityModel.findOne({ where: { provider, identifier } })
+    return this._identityRepository.findOne({ where: { provider, identifier }, relations: { user: true } })
+  }
+
+  public findUserWithPasswordByProviderAndIdentifier = (provider: Typed.Auth.Provider, identifier: string): Promise<IdentityModel | null> => {
+    return this._identityRepository.findOne({
+      where: { provider, identifier },
+      select: { uid: true, provider: true, identifier: true, password: true, isVerified: true, isDefaultAccount: true },
+      relations: { user: true },
+    })
   }
 }
 export { IdentityService }

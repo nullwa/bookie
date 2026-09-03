@@ -1,10 +1,10 @@
 import { IsEmail, IsString, MinLength } from 'class-validator'
 
-export class RegisterDto {
+export class LoginDto {
   @IsEmail()
   email: string
 
   @IsString()
-  @MinLength(8)
+  @MinLength(1)
   password: string
 }

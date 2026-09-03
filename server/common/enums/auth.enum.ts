@@ -7,4 +7,5 @@ export enum Provider {
 export enum Purpose {
   LINK = 'link',
   ACCESS = 'access',
+  REFRESH = 'refresh',
 }
