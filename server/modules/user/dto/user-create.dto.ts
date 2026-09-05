@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator'
 
 // #region imports
 import { Enum } from '@/common/enums'
@@ -10,6 +10,11 @@ export class UserCreateDto {
 
   @IsNotEmpty({ message: 'Last name must not be empty' })
   lastName: string
+
+  @IsNotEmpty({ message: 'CIN must not be empty' })
+  @Max(99999999, { message: 'CIN must be a valid number with a maximum of 8 digits' })
+  @Min(10000000, { message: 'CIN must be a valid number with a minimum of 8 digits' })
+  cin: number
 
   @IsOptional()
   @IsString({ message: 'Avatar must be a string' })

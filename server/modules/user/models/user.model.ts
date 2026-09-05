@@ -12,13 +12,16 @@ class UserModel {
   @PrimaryGeneratedColumn({ name: 'tuu-uid' })
   uid: number
 
-  @Column({ name: 'u-first-name' })
+  @Column({ name: 'tuu-first-name' })
   firstName: string
 
-  @Column({ name: 'u-last-name' })
+  @Column({ name: 'tuu-last-name' })
   lastName: string
 
-  @Column({ name: 'u-avatar', nullable: true })
+  @Column({ name: 'tuu-cin', nullable: false, unique: true })
+  cin: number
+
+  @Column({ name: 'tuu-avatar', nullable: true })
   avatar: string
 
   @Column({ name: 'tuu-role', type: 'enum', enum: Enum.User.Role, default: Enum.User.Role.GUEST })
