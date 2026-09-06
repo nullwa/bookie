@@ -4,7 +4,9 @@ import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
 // #region imports
-import { IdentityService } from '@/modules/identity/identity.service'
+import { Enum } from '@/common/enums'
+import { UserService } from '@/modules/user/user.service'
+import { UserModel } from '@/modules/user/models/user.model'
 // #endregion
 
 /**
@@ -31,7 +33,7 @@ class AuthJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    */
   constructor(
     private readonly _configService: ConfigService,
-    private readonly _identityService: IdentityService
+    private readonly _userService: UserService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -43,8 +45,14 @@ class AuthJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   public validate = async (payload: Typed.Auth.Profile): Promise<Typed.Auth.Profile> => {
     if (!payload.sub || !payload.identifier) throw new UnauthorizedException('invalid token payload')
 
-    const identity = await this._identityService.findUserIdentityByProviderAndIdentifier(payload.provider, payload.identifier)
-    if (!identity) throw new UnauthorizedException('invalid token payload')
+    // Reject anything that isn't an access token — a refresh (or link)
+    // token must never be usable to authenticate a normal request.
+    if (payload.purpose !== Enum.Auth.Purpose.ACCESS) throw new UnauthorizedException('invalid token payload')
+
+    if (payload.iat) {
+      const user: UserModel | null = await this._userService.find(payload.sub)
+      if (!user) throw new UnauthorizedException('invalid token payload')
+    }
 
     return { ...payload }
   }

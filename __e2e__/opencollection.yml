@@ -1,16 +1,7 @@
 opencollection: 1.0.0
 
 info:
-  name: Bookie
-
-request:
-  variables:
-    - name: local
-      value: localhost
-    - name: port
-      value: "3000"
-    - name: jwt
-      value: ""
+  name: __e2e__
 bundled: false
 extensions:
   bruno:

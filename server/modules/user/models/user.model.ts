@@ -1,10 +1,10 @@
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { hash } from 'bcrypt'
 
 // #region imports
 import { Enum } from '@/common/enums'
 import { Constants } from '@/common/constants'
 import { uniqueArrayTransformer } from '@/common/helpers'
-import { IdentityModel } from '@/modules/identity/models/identity.model'
 // #endregion
 
 @Entity('table-usr-user')
@@ -12,13 +12,27 @@ class UserModel {
   @PrimaryGeneratedColumn({ name: 'tuu-uid' })
   uid: number
 
+  // #region credentials
+  @Column({ name: 'tuu-email', unique: true })
+  email: string
+
+  @Column({ name: 'tuu-google-id', unique: true, nullable: true })
+  googleId: string
+
+  @Column({ name: 'tuu-password', nullable: true, select: false })
+  password: string
+
+  @Column({ name: 'tuu-is-verified', default: false })
+  isVerified: boolean
+  // #endregion
+
   @Column({ name: 'tuu-first-name' })
   firstName: string
 
   @Column({ name: 'tuu-last-name' })
   lastName: string
 
-  @Column({ name: 'tuu-cin', nullable: false, unique: true })
+  @Column({ name: 'tuu-cin', nullable: true, unique: true })
   cin: number
 
   @Column({ name: 'tuu-avatar', nullable: true })
@@ -30,8 +44,17 @@ class UserModel {
   @Column({ name: 'tuu-abilities', type: 'simple-array', nullable: true, transformer: uniqueArrayTransformer() })
   abilities: Typed.User.Ability[]
 
-  @OneToMany(() => IdentityModel, (identity) => identity.user)
-  identities: IdentityModel[]
+  /**
+   * Hashes the user's password before inserting or updating the user entity in the database
+   * This method is decorated with @BeforeInsert and @BeforeUpdate to ensure that the password is always hashed before being stored in the database
+   *
+   * @returns A promise that resolves when the password has been hashed and updated in the user entity
+   */
+  @BeforeInsert()
+  @BeforeUpdate()
+  public hashPassword = async (): Promise<void> => {
+    if (this.password) this.password = await hash(this.password, Constants.AUTH_SALT)
+  }
 
   @BeforeInsert()
   public assignAbilitiesByRole = (): void => {

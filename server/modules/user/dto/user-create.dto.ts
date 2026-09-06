@@ -1,10 +1,21 @@
-import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator'
+import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Max, Min, MinLength } from 'class-validator'
 
 // #region imports
 import { Enum } from '@/common/enums'
 // #endregion
 
 export class UserCreateDto {
+  @IsEmail({}, { message: 'Email must be a valid email address' })
+  email: string
+
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @IsOptional()
+  password: string
+
+  @IsOptional()
+  @IsString({ message: 'Google ID must be a string' })
+  googleId: string
+
   @IsNotEmpty({ message: 'First name must not be empty' })
   firstName: string
 
@@ -14,6 +25,7 @@ export class UserCreateDto {
   @IsNotEmpty({ message: 'CIN must not be empty' })
   @Max(99999999, { message: 'CIN must be a valid number with a maximum of 8 digits' })
   @Min(10000000, { message: 'CIN must be a valid number with a minimum of 8 digits' })
+  @IsOptional()
   cin: number
 
   @IsOptional()

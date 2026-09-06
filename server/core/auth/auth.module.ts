@@ -11,12 +11,12 @@ import { AuthController } from '@/core/auth/auth.controller'
 import { AuthGoogleStrategy } from '@/common/strategies/auth-google.strategy'
 import { AuthJwtStrategy } from '@/common/strategies/auth-jwt.strategy'
 import { AuthJwtGuard } from '@/common/guards/auth-jwt.guard'
-import { IdentityModule } from '@/modules/identity/identity.module'
+import { UserModule } from '@/modules/user/user.module'
 // #endregion
 
 @Module({
   imports: [
-    IdentityModule,
+    UserModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

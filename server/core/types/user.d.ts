@@ -3,6 +3,6 @@ import * as User from '@/common/enums/user.enum'
 
 export namespace user {
   type Role = User.Role
+
   type Ability = User.Ability
-  type Profile = { uid: number; role: Role; abilities: Ability[] }
 }

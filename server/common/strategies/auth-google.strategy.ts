@@ -5,7 +5,7 @@ import { Strategy, Profile, VerifyCallback } from 'passport-google-oauth20'
 import type { Request } from 'express'
 
 // #region imports
-import { IdentityService } from '@/modules/identity/identity.service'
+
 // #endregion
 
 /**
@@ -36,10 +36,7 @@ class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {
    *   - GOOGLE_SECRET: Google OAuth 2.0 Client Secret
    *   - GOOGLE_CALLBACK: OAuth 2.0 callback URL (redirect URI registered with Google)
    */
-  constructor(
-    private readonly _configService: ConfigService,
-    private readonly _identityService: IdentityService
-  ) {
+  constructor(private readonly _configService: ConfigService) {
     super({
       clientID: _configService.getOrThrow<string>('GOOGLE_CLIENT'),
       clientSecret: _configService.getOrThrow<string>('GOOGLE_SECRET'),
