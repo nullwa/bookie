@@ -1,5 +1,5 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { hash } from 'bcrypt'
+import { hash, compare } from 'bcrypt'
 
 // #region imports
 import { Enum } from '@/common/enums'
@@ -45,10 +45,10 @@ class UserModel {
   abilities: Typed.User.Ability[]
 
   /**
-   * Hashes the user's password before inserting or updating the user entity in the database
+   * @description Hashes the user's password before inserting or updating the user entity in the database
    * This method is decorated with @BeforeInsert and @BeforeUpdate to ensure that the password is always hashed before being stored in the database
    *
-   * @returns A promise that resolves when the password has been hashed and updated in the user entity
+   * @returns {void} A promise that resolves when the password has been hashed and updated in the user entity
    */
   @BeforeInsert()
   @BeforeUpdate()
@@ -72,6 +72,16 @@ class UserModel {
     if (!this.abilities || !this.abilities.includes(ability)) return false
     this.abilities = this.abilities.filter((a) => a !== ability)
     return true
+  }
+
+  /**
+   * @description Compares the provided password with the user's hashed password
+   * @param {string} password The password to compare
+   * @returns {boolean} A promise that resolves to true if the passwords match, false otherwise
+   */
+  public ComparePassword = async (password: string): Promise<boolean> => {
+    if (!this.password) return false
+    return await compare(password, this.password)
   }
 }
 export { UserModel }

@@ -1,8 +1,11 @@
 // user.d.ts (runtime file)
-import * as User from '@/common/enums/user.enum'
+import * as user from '@/common/enums/user.enum'
 
-export namespace user {
-  type Role = User.Role
-
-  type Ability = User.Ability
+declare global {
+  namespace Typed {
+    namespace User {
+      type Role = user.Role
+      type Ability = user.Ability
+    }
+  }
 }
