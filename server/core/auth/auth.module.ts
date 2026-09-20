@@ -6,11 +6,11 @@ import { APP_GUARD } from '@nestjs/core'
 
 // #region imports
 import { jwtConfig } from '@/core/config/jwt.config'
+import { AuthJwtGuard } from '@/core/guards/auth-jwt.guard'
 import { AuthService } from '@/core/auth/auth.service'
 import { AuthController } from '@/core/auth/auth.controller'
-import { AuthGoogleStrategy } from '@/common/strategies/auth-google.strategy'
-import { AuthJwtStrategy } from '@/common/strategies/auth-jwt.strategy'
-import { AuthJwtGuard } from '@/common/guards/auth-jwt.guard'
+import { AuthJwtStrategy } from '@/core/strategies/auth-jwt.strategy'
+import { AuthGoogleStrategy } from '@/core/strategies/auth-google.strategy'
 import { UserModule } from '@/modules/user/user.module'
 // #endregion
 

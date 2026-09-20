@@ -2,9 +2,9 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Unauthor
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
 
-import { ROLES_KEY } from '@/common/decorators/role.decorator'
-import { ABILITIES_KEY } from '@/common/decorators/abilities.decorator'
-import { IS_PUBLIC_KEY } from '@/common/decorators/public.decorator'
+import { ROLES_KEY } from '@/core/decorators/role.decorator'
+import { ABILITIES_KEY } from '@/core/decorators/abilities.decorator'
+import { IS_PUBLIC_KEY } from '@/core/decorators/public.decorator'
 import { Constants } from '@/common/constants'
 
 /**

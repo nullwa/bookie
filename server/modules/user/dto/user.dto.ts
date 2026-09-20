@@ -33,7 +33,7 @@ export class UserCreateDto {
   avatar: string
 
   // The role must be one of the values defined in the eUserRole enum.
-  @IsEnum(Enum.User.Role)
+  @IsEnum(Enum.User.Role, { message: 'Role must be a valid role' })
   role: Typed.User.Role = Enum.User.Role.GUEST
 
   @IsArray()

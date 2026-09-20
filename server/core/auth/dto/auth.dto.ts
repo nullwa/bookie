@@ -1,10 +1,18 @@
-import { IsEmail, IsEnum, IsNotEmpty, MinLength } from 'class-validator'
+import { IsEmail, IsEnum, IsString, IsNotEmpty, MinLength } from 'class-validator'
 
 // #region imports
 import { Enum } from '@/common/enums'
 // #endregion
 
-class AuthRegisterDto {
+export class AuthLoginDto {
+  @IsEmail({}, { message: 'Email must be a valid email address' })
+  email: string
+
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  password: string
+}
+
+export class AuthRegisterDto {
   @IsEmail({}, { message: 'Email must be a valid email address' })
   email: string
 
@@ -21,4 +29,8 @@ class AuthRegisterDto {
   @IsEnum(Enum.User.Role)
   role: Typed.User.Role = Enum.User.Role.GUEST
 }
-export { AuthRegisterDto }
+
+export class AuthRefreshTokenDto {
+  @IsString()
+  refreshToken: string
+}

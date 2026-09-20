@@ -43,7 +43,7 @@ class AuthJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   public validate = async (payload: Typed.Auth.Profile): Promise<Typed.Auth.Profile> => {
-    if (!payload.sub || !payload.identifier) throw new UnauthorizedException('invalid token payload')
+    if (!payload.sub || !payload.email) throw new UnauthorizedException('invalid token payload')
 
     // Reject anything that isn't an access token — a refresh (or link)
     // token must never be usable to authenticate a normal request.

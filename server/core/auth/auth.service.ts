@@ -4,13 +4,12 @@ import { JwtService } from '@nestjs/jwt'
 import type { StringValue } from 'ms'
 
 // #region imports
+import { Enum } from '@/common/enums'
+import { getExpiryDate } from '@/common/helpers'
 import { UserService } from '@/modules/user/user.service'
 import { UserModel } from '@/modules/user/models/user.model'
-// dto
-import { AuthRegisterDto } from '@/core/auth/dto/auth-register.dto'
-import { AuthLoginDto } from '@/core/auth/dto/auth-login.dto'
-// enums
-import { Enum } from '@/common/enums'
+
+import { AuthRegisterDto, AuthLoginDto } from '@/core/auth/dto/auth.dto'
 // #endregion
 
 @Injectable()
@@ -23,30 +22,46 @@ class AuthService {
 
   public register = async (payload: AuthRegisterDto): Promise<Typed.Auth.Token> => {
     const user: UserModel = await this._userService.create({ ...payload })
-    return this.generateToken(user, Enum.Auth.Purpose.ACCESS)
+    return this.issueTokens(user)
   }
 
   public login = async (payload: AuthLoginDto): Promise<Typed.Auth.Token> => {
     const user: UserModel | null = await this._userService.findByEmailWithPassword(payload.email)
-    if (!user) throw new UnauthorizedException('Invalid credentials')
-
-    const isPasswordValid: boolean = await user.ComparePassword(payload.password)
-    if (!isPasswordValid) throw new UnauthorizedException('Password incorrect')
-    return this.generateToken(user, Enum.Auth.Purpose.ACCESS)
+    const isPasswordValid: boolean = user ? await user.comparePassword(payload.password) : false
+    if (!user || !isPasswordValid) throw new UnauthorizedException('Invalid credentials')
+    return this.issueTokens(user)
   }
 
-  private generateToken = (user: UserModel, purpose: Typed.Auth.Purpose): Typed.Auth.Token => {
+  public refresh = async (refreshToken: string): Promise<Typed.Auth.Token> => {
+    const stored = await this._userService.findValidToken(refreshToken, Enum.Auth.Purpose.REFRESH)
+    if (!stored) throw new UnauthorizedException('Invalid or expired refresh token')
+
+    await this._userService.deleteToken(refreshToken, Enum.Auth.Purpose.REFRESH)
+    return this.issueTokens(stored.user)
+  }
+
+  public logout = async (refreshToken: string): Promise<void> => {
+    await this._userService.deleteToken(refreshToken, Enum.Auth.Purpose.REFRESH)
+  }
+
+  // #region generating tokens
+  private issueTokens = async (user: UserModel): Promise<Typed.Auth.Token> => {
+    const accessExpire = this._configService.getOrThrow<StringValue>('JWT_EXPIRE', '2h')
+    const refreshExpire = this._configService.getOrThrow<StringValue>('JWT_EXPIRE_REFRESH', '1d')
+
+    const accessToken = this.generateToken(user, Enum.Auth.Purpose.ACCESS, accessExpire)
+    const refreshToken = this.generateToken(user, Enum.Auth.Purpose.REFRESH, refreshExpire)
+
+    await this._userService.addAuthenticationToken({ token: refreshToken, type: Enum.Auth.Purpose.REFRESH, expiresAt: getExpiryDate(refreshExpire) }, user)
+
+    return { accessToken, refreshToken }
+  }
+
+  private generateToken = (user: UserModel, purpose: Typed.Auth.Purpose, expiresIn: StringValue): string => {
     const payload: Typed.Auth.Profile = { sub: user.uid, email: user.email, role: user.role, abilities: user.abilities, purpose: purpose }
-    return {
-      accessToken: this._jwtService.sign(payload, {
-        secret: this._configService.getOrThrow<string>('JWT_SECRET'),
-        expiresIn: this._configService.getOrThrow<StringValue>('JWT_EXPIRE', '2h'),
-      }),
-      refreshToken: this._jwtService.sign(payload, {
-        secret: this._configService.getOrThrow<string>('JWT_SECRET_REFRESH'),
-        expiresIn: this._configService.getOrThrow<StringValue>('JWT_EXPIRE_REFRESH', '1d'),
-      }),
-    }
+    const secret = purpose === Enum.Auth.Purpose.REFRESH ? this._configService.getOrThrow<string>('JWT_SECRET_REFRESH') : this._configService.getOrThrow<string>('JWT_SECRET')
+    return this._jwtService.sign(payload, { secret, expiresIn })
   }
+  // #endregion
 }
 export { AuthService }
