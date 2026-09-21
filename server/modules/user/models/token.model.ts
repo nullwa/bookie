@@ -7,10 +7,10 @@ import { UserModel } from '@/modules/user/models/user.model'
 // #endregion
 
 @Entity('table-usr-token')
-@Index('ix_tut_token_type_user', ['token', 'type', 'user'], { unique: true })
+@Index('ix_tut_token_type_user', ['type', 'user'], { unique: true })
 class TokenModel {
   // #region Properties
-  @PrimaryGeneratedColumn({ name: 'tuu-uid' })
+  @PrimaryGeneratedColumn({ name: 'tut-uid' })
   uid: number
 
   @Column({ name: 'tut-purpose', type: 'enum', enum: Enum.Auth.Purpose, default: Enum.Auth.Purpose.ACCESS })

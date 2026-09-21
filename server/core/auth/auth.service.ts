@@ -29,6 +29,7 @@ class AuthService {
     const user: UserModel | null = await this._userService.findByEmailWithPassword(payload.email)
     const isPasswordValid: boolean = user ? await user.comparePassword(payload.password) : false
     if (!user || !isPasswordValid) throw new UnauthorizedException('Invalid credentials')
+
     return this.issueTokens(user)
   }
 
@@ -36,7 +37,6 @@ class AuthService {
     const stored = await this._userService.findValidToken(refreshToken, Enum.Auth.Purpose.REFRESH)
     if (!stored) throw new UnauthorizedException('Invalid or expired refresh token')
 
-    await this._userService.deleteToken(refreshToken, Enum.Auth.Purpose.REFRESH)
     return this.issueTokens(stored.user)
   }
 

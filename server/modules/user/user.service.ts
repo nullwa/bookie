@@ -44,9 +44,9 @@ class UserService {
    * @param {UserModel} user
    * @returns {Promise<TokenModel>} A promise that resolves to the newly created TokenModel entity
    */
-  public addAuthenticationToken = (tokenCreateDto: TokenCreateDto, user: UserModel): Promise<TokenModel> => {
-    const token: TokenModel = this._tokenRepository.create({ ...tokenCreateDto, user })
-    return this._tokenRepository.save(token)
+  public addAuthenticationToken = async (tokenCreateDto: TokenCreateDto, user: UserModel): Promise<TokenModel> => {
+    await this._tokenRepository.upsert({ ...tokenCreateDto, user }, { conflictPaths: ['type', 'user'] })
+    return this._tokenRepository.findOneByOrFail({ type: tokenCreateDto.type, user: { uid: user.uid } })
   }
 
   public findValidToken = async (token: string, type: Typed.Auth.Purpose): Promise<TokenModel | null> => {

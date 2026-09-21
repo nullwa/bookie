@@ -45,8 +45,8 @@ async function bootstrap() {
     '/api-documentation',
     apiReference({
       content: documentFactory,
-      theme: 'kepler',
-      darkMode: false,
+      theme: 'alternate',
+      darkMode: true,
       persistAuth: true,
       authentication: { preferredSecurityScheme: 'access-token' },
       agent: { disabled: true },
