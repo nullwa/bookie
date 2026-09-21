@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
 
+import { SwaggerModule } from '@nestjs/swagger'
+import { apiReference } from '@scalar/nestjs-api-reference'
+import { openApiConfig } from '@/core/config/openapi.config'
+
 import { AppModule } from '@/app.module'
 
 async function bootstrap() {
@@ -26,6 +30,18 @@ async function bootstrap() {
     origin: process.env.APP_CORS ?? 'http://localhost:3000',
     credentials: true,
   })
+
+  /**
+   * Expose the OpenAPI JSON document at `/openapi-json` without enabling the
+   * Swagger UI.
+   */
+  const documentFactory = () => SwaggerModule.createDocument(app, openApiConfig)
+  SwaggerModule.setup('openapi', app, documentFactory, {
+    ui: false,
+    raw: ['json'],
+    jsonDocumentUrl: 'openapi.json',
+  })
+  app.use('/api-documentation', apiReference({ content: documentFactory }))
 
   await app.listen(process.env.APP_PORT ?? 3000)
 }
