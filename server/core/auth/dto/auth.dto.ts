@@ -37,11 +37,12 @@ export class AuthRegisterDto {
   // The role must be one of the values defined in the eUserRole enum.
   @ApiProperty({ enum: Enum.User.Role })
   @IsEnum(Enum.User.Role)
-  role: Typed.User.Role = Enum.User.Role.GUEST
+  role: Omit<Typed.User.Role, 'super'> = Enum.User.Role.GUEST
 }
 
 export class AuthRefreshTokenDto {
   @ApiProperty({ name: 'refresh-token', description: 'Refresh token used to obtain a new access token' })
   @IsString()
+  @IsNotEmpty()
   refreshToken: string
 }

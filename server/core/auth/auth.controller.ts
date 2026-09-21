@@ -36,6 +36,7 @@ class AuthController {
   }
 
   @ApiOperation({ summary: 'Refresh auth tokens', description: 'Generates a new authentication token using a valid refresh token.' })
+  @Public()
   @Post('refresh')
   public refresh(@Body() authRefreshTokenDto: AuthRefreshTokenDto): Promise<Typed.Auth.Token> {
     return this._authService.refresh(authRefreshTokenDto.refreshToken)
