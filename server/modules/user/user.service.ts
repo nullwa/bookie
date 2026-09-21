@@ -69,7 +69,6 @@ class UserService {
     return this._tokenRepository.delete({ token, type })
   }
 
-  // Called by a cron job / scheduled task, not on every request
   public purgeExpiredTokens = (): Promise<DeleteResult> => {
     return this._tokenRepository.delete({ expiresAt: LessThan(new Date()) })
   }

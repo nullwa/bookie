@@ -8,7 +8,9 @@ export enum Role {
 
 export enum Ability {
   USER_VIEW = 'user:view',
-  USER_CREATE = 'user:create',
-  USER_UPDATE = 'user:update',
+  USER_MOD = 'user:mod',
   USER_DELETE = 'user:delete',
+  STAFF_VIEW = 'staff:view',
+  STAFF_MOD = 'staff:mod',
+  STAFF_DELETE = 'staff:delete',
 }
