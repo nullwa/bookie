@@ -41,7 +41,17 @@ async function bootstrap() {
     raw: ['json'],
     jsonDocumentUrl: 'openapi.json',
   })
-  app.use('/api-documentation', apiReference({ content: documentFactory }))
+  app.use(
+    '/api-documentation',
+    apiReference({
+      content: documentFactory,
+      theme: 'kepler',
+      darkMode: false,
+      persistAuth: true,
+      authentication: { preferredSecurityScheme: 'access-token' },
+      agent: { disabled: true },
+    })
+  )
 
   await app.listen(process.env.APP_PORT ?? 3000)
 }
