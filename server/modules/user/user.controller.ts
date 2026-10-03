@@ -3,7 +3,7 @@ import { Body, Controller, Post } from '@nestjs/common'
 // #region imports
 import { UserService } from '@/modules/user/user.service'
 import { UserCreateDto } from '@/modules/user/dto/user.dto'
-import { Public } from '@/core/decorators/public.decorator'
+import { Public } from '@/common/decorators/public.decorator'
 import { ApiTags } from '@nestjs/swagger'
 // #endregion
 

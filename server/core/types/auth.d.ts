@@ -2,6 +2,7 @@
 import * as auth from '@/common/enums/auth.enum'
 import type { Request } from 'express'
 
+export {}
 declare global {
   namespace Typed {
     namespace Auth {

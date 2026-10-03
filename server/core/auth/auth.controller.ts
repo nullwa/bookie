@@ -4,8 +4,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 // #region #imports
 import { AuthService } from '@/core/auth/auth.service'
 
-import { Public } from '@/core/decorators/public.decorator'
-import { Profile } from '@/core/decorators/profile.decorator'
+import { Public } from '@/common/decorators/public.decorator'
+import { Profile } from '@/common/decorators/profile.decorator'
 
 import { AuthRegisterDto, AuthLoginDto, AuthRefreshTokenDto } from '@/core/auth/dto/auth.dto'
 // #endregion

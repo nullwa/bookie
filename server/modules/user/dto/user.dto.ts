@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Max, Min, MinLength } from 'class-validator'
+import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Length, MinLength } from 'class-validator'
 
 import { faker } from '@faker-js/faker'
 import { ApiProperty } from '@nestjs/swagger'
@@ -31,8 +31,7 @@ export class UserCreateDto {
 
   @ApiProperty({ example: faker.string.numeric(8) })
   @IsNotEmpty({ message: 'CIN must not be empty' })
-  @Max(99999999, { message: 'CIN must be a valid number with a maximum of 8 digits' })
-  @Min(10000000, { message: 'CIN must be a valid number with a minimum of 8 digits' })
+  @Length(8, 8, { message: 'CIN must be exactly 8 digits long' })
   @IsOptional()
   cin: number
 

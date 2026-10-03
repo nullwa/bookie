@@ -7,8 +7,14 @@ import { openApiConfig } from '@/core/config/openapi.config'
 
 import { AppModule } from '@/app.module'
 
+import { HttpExceptionFilter } from '@/core/filters/exception.filter'
+import { ResponseInterceptor } from '@/core/interceptors/success.interceptor'
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+
+  app.useGlobalInterceptors(new ResponseInterceptor())
+  app.useGlobalFilters(new HttpExceptionFilter())
 
   /**
    * Strip unknown properties and reject requests undeclared fields.
@@ -45,7 +51,7 @@ async function bootstrap() {
     '/api-documentation',
     apiReference({
       content: documentFactory,
-      theme: 'alternate',
+      theme: 'kepler',
       darkMode: true,
       persistAuth: true,
       authentication: { preferredSecurityScheme: 'access-token' },

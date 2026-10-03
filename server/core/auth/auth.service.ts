@@ -21,6 +21,8 @@ class AuthService {
   ) {}
 
   public register = async (payload: AuthRegisterDto): Promise<Typed.Auth.Token> => {
+    // a super user should only be creating from it's specific endpoint
+    if (payload.role === Enum.User.Role.SUPER) throw new UnauthorizedException('Invalid data.')
     const user: UserModel = await this._userService.create({ ...payload })
     return this.issueTokens(user)
   }
